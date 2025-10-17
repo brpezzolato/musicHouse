@@ -1,3 +1,4 @@
+DROP DATABASE IF EXISTS musicHouse;
 CREATE DATABASE IF NOT EXISTS musicHouse;
 USE musicHouse;
 
@@ -9,7 +10,24 @@ CREATE TABLE franquias (
     email_contato VARCHAR(100) NOT NULL,
     telefone_contato VARCHAR(100) NOT NULL,
     status ENUM('Ativo', 'Inativo') NOT NULL DEFAULT 'Ativo',
-    data_registro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    data_registro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+INSERT INTO franquias (
+    codigo_postal,
+    endereco_completo,
+    cidade,
+    email_contato,
+    telefone_contato,
+    status
+) VALUES (
+    '04567-123',
+    'Av. Paulista, 1000 - Bela Vista',
+    'São Paulo',
+    'contato@vidaplena-sp.com',
+    '(11) 99999-8888',
+    'Ativo'
 );
 
 CREATE TABLE credenciais (
@@ -27,6 +45,11 @@ INSERT INTO credenciais (cargo, descricao, salario) VALUES
 CREATE TABLE funcionarios (
     id_registro INT AUTO_INCREMENT PRIMARY KEY,
     nome_completo VARCHAR(300) NOT NULL,
+    cpf CHAR(11) UNIQUE NOT NULL,
+    rg VARCHAR(20),
+    data_nascimento DATE,
+    sexo ENUM('Masculino','Feminino','Outro') DEFAULT 'Outro',
+    estado_civil ENUM('Solteiro','Casado','Divorciado','Viúvo','Outro') DEFAULT 'Solteiro',
     email VARCHAR(100) UNIQUE NOT NULL,
     telefone VARCHAR(20) NOT NULL,
     id_franquia INT NOT NULL,
@@ -159,21 +182,6 @@ CREATE TABLE estoque (
     CONSTRAINT fk_est_prod FOREIGN KEY (id_produto) REFERENCES produtos(id_produto)
 ) ;
 
-CREATE TABLE movimentacoes_estoque (
-    id_mov INT AUTO_INCREMENT PRIMARY KEY,
-    id_estoque INT NOT NULL,
-    tipo ENUM('entrada','saida','ajuste') NOT NULL,
-    origem ENUM('compra','venda','ajuste','devolucao') NOT NULL,
-    id_venda INT NULL,
-    id_compra INT NULL,
-    quantidade INT NOT NULL,
-    observacao VARCHAR(255),
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_mov_est FOREIGN KEY (id_estoque) REFERENCES estoque(id_estoque),
-    CONSTRAINT fk_mov_venda FOREIGN KEY (id_venda) REFERENCES venda(id_venda),
-    CONSTRAINT fk_mov_compra FOREIGN KEY (id_compra) REFERENCES compras(id_compra)
-) ;
-
 CREATE TABLE cupons (
     id_cupom INT AUTO_INCREMENT PRIMARY KEY,
     codigo VARCHAR(30) NOT NULL UNIQUE,
@@ -217,12 +225,7 @@ CREATE INDEX idx_item_venda_prod ON item_venda(id_produto);
 CREATE INDEX idx_prod_categoria ON produtos(id_categoria);
 CREATE INDEX idx_pf_prod ON produtos_fornecedores(id_produto);
 CREATE INDEX idx_pf_forn ON produtos_fornecedores(id_fornecedor);
-CREATE INDEX idx_compra_franquia ON compras(id_franquia);
-CREATE INDEX idx_compra_fornecedor ON compras(id_fornecedor);
-CREATE INDEX idx_ic_compra ON itens_compra(id_compra);
 CREATE INDEX idx_estoque_franquia_prod ON estoque(id_franquia, id_produto);
-CREATE INDEX idx_mov_estoque ON movimentacoes_estoque(id_estoque, criado_em);
 CREATE INDEX idx_clientes_email ON clientes(email);
 CREATE INDEX idx_end_cliente ON enderecos_cliente(id_cliente);
 CREATE INDEX idx_rec_venda ON recebimentos_venda(id_venda);
-CREATE INDEX idx_lc_sessao ON lancamentos_caixa(id_sessao_caixa);
