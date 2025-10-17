@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import funcionarioRotas from './routes/funcionariosRotas.js';
+import franquiaRotas from './routes/franquiasRotas.js';
 
 dotenv.config();
 const app = express();
@@ -9,8 +10,8 @@ const porta = process.env.PORT || 8080;
 app.use(cors());
 app.use(express.json());
 
-
 app.use('/funcionarios', funcionarioRotas);
+app.use('/franquias', franquiaRotas);
 
 app.get('/', (req, res) => {
   res.status(200).json({ status: 'online' });

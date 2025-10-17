@@ -10,8 +10,7 @@ const listarFuncionariosController = async (req, res) => {
   // }
 
   try {
-    const { franquia } = req.query || 1;
-    console.log(franquia);
+    const { franquia } = req.query;
 
     const funcionarios = await lerFuncionarios(franquia);
     res.status(200).json(funcionarios);
@@ -52,10 +51,9 @@ const criarFuncionarioController = async (req, res) => {
       estado_civil,
       email,
       telefone,
+      id_franquia,
       id_credencial,
     } = req.body;
-
-    const id_franquia = req.query.franquia || 1;
 
     const funcionarioData = {
       nome_completo,

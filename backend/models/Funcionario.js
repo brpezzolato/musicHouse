@@ -2,10 +2,14 @@ import { create, readAll, read } from '../config/database.js';
 
 const lerFuncionarios = async (franquia) => {
   try {
-    return await readAll(
-      'funcionarios',
-      `id_franquia  = ${franquia} AND status = 'Ativo'`
-    );
+    if (franquia === undefined) {
+      return await readAll('funcionarios', `status = 'Ativo'`);
+    } else {
+      return await readAll(
+        'funcionarios',
+        `id_franquia  = ${franquia} AND status = 'Ativo'`
+      );
+    }
   } catch (error) {
     console.error('Erro ao criar funcionario:', error);
     throw error;
