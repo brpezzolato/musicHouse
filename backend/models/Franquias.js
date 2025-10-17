@@ -11,7 +11,11 @@ const cadastrarFranquia = async (franquiaData) => {
 
 const atualizarFranquia = async (id_franquia, franquiaData) => {
   try {
-    return await update('franquias', id_franquia, franquiaData);
+    return await update(
+      'franquias',
+      franquiaData,
+      `id_franquia = ${id_franquia}`
+    );
   } catch (error) {
     console.error('Erro ao atualizar franquia:', error);
     throw error;

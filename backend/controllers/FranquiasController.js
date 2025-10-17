@@ -59,7 +59,7 @@ const editarFranquiaController = async (req, res) => {
       status,
     };
 
-    console.log('Dados para atualização da franquia:', franquiaData);
+    console.log('Dados para atualização da franquia:', id_franquia, franquiaData);
 
     await atualizarFranquia(id_franquia, franquiaData);
     res.status(200).json({ mensagem: 'Franquia atualizada com sucesso.' });
