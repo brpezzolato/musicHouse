@@ -34,4 +34,22 @@ const criarFuncionario = async (funcionarioData) => {
   }
 };
 
-export { lerFuncionarios, obterFuncionarioPorId, criarFuncionario };
+const atualizarFuncionario = async (id_funcionario, funcionarioData) => {
+  try {
+    return await update(
+      'funcionarios',
+      funcionarioData,
+      `id_registro = ${id_funcionario}`
+    );
+  } catch (error) {
+    console.error('Erro ao atualizar funcionario:', error);
+    throw error;
+  }
+};
+
+export {
+  lerFuncionarios,
+  obterFuncionarioPorId,
+  criarFuncionario,
+  atualizarFuncionario,
+};

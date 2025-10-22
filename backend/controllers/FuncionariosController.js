@@ -3,6 +3,8 @@ import {
   obterFuncionarioPorId,
   criarFuncionario,
 } from '../models/Funcionario.js';
+import generatePassword from '../utils/generatePassword.js';
+import generateHashedPassword from '../utils/hashPassword.js';
 
 const listarFuncionariosController = async (req, res) => {
   // if (!req.usuario.id) {
@@ -53,7 +55,11 @@ const criarFuncionarioController = async (req, res) => {
       telefone,
       id_franquia,
       id_credencial,
+      fotoFuncionario,
     } = req.body;
+
+    const senhaGerada = await generatePassword();
+    const senhaHash = await generateHashedPassword(senhaGerada);
 
     const funcionarioData = {
       nome_completo,
@@ -66,15 +72,22 @@ const criarFuncionarioController = async (req, res) => {
       telefone,
       id_franquia,
       id_credencial,
+      fotoFuncionario,
+      senha: senhaHash,
     };
+
+    console.log('Dados do novo Funcionario:', senhaHash);
 
     const funcionarioId = await criarFuncionario(funcionarioData);
     res.status(201).json({
-      mensagem: 'Funcionario Criado com sucesso !!!',
-      funcionarioId,
+      mensagem: `Funcionario de registro ${funcionarioId} Criado com sucesso !!! | Guarde a senha do funcionario: ${senhaGerada}`,
+      funcionarioData,
     });
   } catch (error) {
     console.error('Erro ao criar Funcionario:', error);
+    if (error.errno === 1062) {
+      return res.status(400).json({ mensagem: 'CPF ou Email já cadastrado' });
+    }
     res.status(500).json({ mensagem: 'Erro ao criar Funcionario' });
   }
 };

@@ -1,4 +1,4 @@
-function generatePassword() {
+async function generatePassword() {
   var tamanho = 8,
     caracteries =
       'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
@@ -9,5 +9,4 @@ function generatePassword() {
   return senha;
 }
 
-const secretKey = generatePassword();
-console.log('Senha Secreta Gerada:', secretKey);
+export default generatePassword;

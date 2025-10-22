@@ -45,15 +45,17 @@ INSERT INTO credenciais (cargo, descricao, salario) VALUES
 CREATE TABLE funcionarios (
     id_registro INT AUTO_INCREMENT PRIMARY KEY,
     nome_completo VARCHAR(300) NOT NULL,
-    cpf CHAR(11) UNIQUE NOT NULL,
+    cpf CHAR(11) NOT NULL,
     rg VARCHAR(20),
     data_nascimento DATE,
     sexo ENUM('Masculino','Feminino','Outro') DEFAULT 'Outro',
     estado_civil ENUM('Solteiro','Casado','Divorciado','Viúvo','Outro') DEFAULT 'Solteiro',
-    email VARCHAR(100) UNIQUE NOT NULL,
+    email VARCHAR(100) NOT NULL,
     telefone VARCHAR(20) NOT NULL,
     id_franquia INT NOT NULL,
     id_credencial INT NOT NULL,
+    fotoFuncionario TEXT NOT NULL,
+    senha TEXT NOT NULL,
     status ENUM('Ativo', 'Inativo') DEFAULT 'Ativo',
     data_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -96,19 +98,48 @@ CREATE TABLE venda (
 CREATE TABLE categorias (
     id_categoria INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(200) NOT NULL UNIQUE,
-    descricao VARCHAR(300) NOT NULL
+    descricao VARCHAR(300) NOT NULL,
+    icone TEXT NOT NULL
 );
+
+CREATE TABLE estoque (
+    id_estoque INT AUTO_INCREMENT PRIMARY KEY,
+    id_franquia INT NOT NULL,
+    id_produto INT NOT NULL,
+    quantidade INT NOT NULL DEFAULT 0,
+    minimo INT NOT NULL DEFAULT 0,
+    UNIQUE KEY uq_estoque (id_franquia, id_produto),
+    CONSTRAINT fk_est_franquia FOREIGN KEY (id_franquia) REFERENCES franquias(id_franquia),
+    CONSTRAINT fk_est_prod FOREIGN KEY (id_produto) REFERENCES produtos(id_produto)
+) ;
 
 CREATE TABLE produtos (
     id_produto INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(200) NOT NULL,
     descricao VARCHAR(300) NOT NULL,
+    materiais VARCHAR(300) NOT NULL,
+    detalhes VARCHAR(300) NOT NULL,
     cor VARCHAR(70) NOT NULL,
+    desconto VARCHAR(50) NULL,
     id_categoria INT NOT NULL,
     valor DECIMAL (10,2) NOT NULL,
     custo_producao DECIMAL(10,2),
     imagem TEXT NOT NULL,
     CONSTRAINT fk_prod_categoria FOREIGN KEY (id_categoria) REFERENCES categorias(id_categoria)
+);
+
+CREATE TABLE variacoes_produto (
+    id_variacao INT AUTO_INCREMENT PRIMARY KEY,
+    id_produto INT NOT NULL,
+    nome_variacao VARCHAR(150) NOT NULL,
+    cor TEXT,
+    estoque INT DEFAULT 0,
+    imagem TEXT,
+    status ENUM('Ativo', 'Inativo') DEFAULT 'Ativo',
+    data_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_var_prod FOREIGN KEY (id_produto) 
+        REFERENCES produtos(id_produto)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE item_venda (
@@ -169,17 +200,6 @@ CREATE TABLE enderecos_cliente (
     principal TINYINT(1) NOT NULL DEFAULT 0,
     criada_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_end_cliente FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente)
-) ;
-
-CREATE TABLE estoque (
-    id_estoque INT AUTO_INCREMENT PRIMARY KEY,
-    id_franquia INT NOT NULL,
-    id_produto INT NOT NULL,
-    quantidade INT NOT NULL DEFAULT 0,
-    minimo INT NOT NULL DEFAULT 0,
-    UNIQUE KEY uq_estoque (id_franquia, id_produto),
-    CONSTRAINT fk_est_franquia FOREIGN KEY (id_franquia) REFERENCES franquias(id_franquia),
-    CONSTRAINT fk_est_prod FOREIGN KEY (id_produto) REFERENCES produtos(id_produto)
 ) ;
 
 CREATE TABLE cupons (
