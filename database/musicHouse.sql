@@ -102,9 +102,13 @@ CREATE TABLE categorias (
     icone TEXT NOT NULL
 );
 
-INSERT INTO categorias (nome, descricao, icone) VALUES
-('Instrumentos Musicais', 'Categoria que abrange todos os tipos de instrumentos e acessórios musicais, incluindo cordas, teclas, percussão e áudio profissional.', 'icone_instrumentos.png');
-
+INSERT INTO categorias (nome, descricao, icone) VALUES 
+('Cordas', 'Toque que emociona.', '/updates/iconesCategorias/iconCordas.png'),
+('Percussão', 'Ritmo que pulsa.', '/updates/iconesCategorias/iconPercussao.png'),
+('Teclas', 'Na pontas dos dedos.', '/updates/iconesCategorias/iconTeclas.png'),
+('Sopro', 'Som que vem do fôlego.', '/updates/iconesCategorias/iconSopro.png'),
+('Áudio', 'Clareza em cada nota.', '/updates/iconesCategorias/iconAudio.png'),
+('Acessórios', 'O apoio do seu som.', '/updates/iconesCategorias/iconAcessorio.png');
 
 CREATE TABLE produtos (
     id_produto INT AUTO_INCREMENT PRIMARY KEY,

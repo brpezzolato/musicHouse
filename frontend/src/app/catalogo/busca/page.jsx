@@ -61,7 +61,18 @@ export default function Busca() {
                     </p>
                   </div>
                   <div className="sm:ms-[0%] ms-[4%]">
-                    <Produtos produtos={resultado} />
+                    <div className="body-produto">
+                      <div
+                        className="py-6 sm:py-8 lg:py-12"
+                        style={{ paddingTop: '0' }}
+                      >
+                        <div className="mx-auto max-w-screen-xl px-6 ps-0">
+                          <div className="flex flex-wrap justify-center md:justify-start gap-6">
+                            <Produtos produtos={resultado} />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               ) : (

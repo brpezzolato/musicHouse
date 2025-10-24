@@ -314,7 +314,7 @@ function SidebarInput({ className, ...props }) {
 
 function SidebarHeader({ className, ...props }) {
   return (
-    <Link href="/catalog" aria-label="Home">
+    <Link href="/catalogo" aria-label="Home">
       <div
         data-slot="sidebar-header"
         data-sidebar="header"

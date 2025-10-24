@@ -10,7 +10,7 @@ INSERT INTO produtos (nome, descricao, materiais, detalhes, cor, desconto, id_ca
 ('Bateria Acústica 5 Peças', 'Kit completo de bateria com pratos e ferragens.', 'Madeira de álamo e metal', 'Inclui bumbo, toms, surdo e caixa', 'Vermelha', '15%', 1, 4499.90, 2500.00, 'bateria_5pcs.jpg'),
 ('Caixa de Som Ativa 500W', 'Caixa amplificada com Bluetooth e entrada USB.', 'Plástico ABS e componentes eletrônicos', 'Equalizador de 5 bandas integrado', 'Preta', NULL, 1, 1299.00, 700.00, 'caixa_ativa.jpg'),
 ('Microfone Dinâmico Cardioide', 'Ideal para vocais e instrumentos ao vivo.', 'Metal e cápsula dinâmica', 'Resposta de frequência de 50Hz a 15kHz', 'Prata', NULL, 1, 399.90, 120.00, 'microfone_cardioide.jpg'),
-('Fone de Ouvido Profissional', 'Fone fechado com resposta plana e alta definição.', 'Plástico reforçado e almofadas de couro sintético', 'Cabo destacável de 3m', 'Preto', 'GUITARRA10' 1, 899.00, 450.00, 'fone_profissional.jpg'),
+('Fone de Ouvido Profissional', 'Fone fechado com resposta plana e alta definição.', 'Plástico reforçado e almofadas de couro sintético', 'Cabo destacávede 3m', 'Preto', 'GUITARRA10', 1, 899.00, 450.00, 'fone_profissional.jpg'),
 ('Pedal de Distorção', 'Pedal de efeito com drive ajustável e bypass verdadeiro.', 'Carcaça de alumínio', 'Controles de Gain, Tone e Level', 'Laranja', NULL, 1, 499.00, 200.00, 'pedal_distorcao.jpg'),
 ('Suporte para Microfone', 'Suporte ajustável com base tripé.', 'Aço carbono e plástico', 'Altura regulável de 90cm a 160cm', 'Preto', NULL, 1, 159.90, 60.00, 'suporte_microfone.jpg'),
 ('Cabo P10 5 Metros', 'Cabo de áudio profissional com conectores banhados a ouro.', 'Cobre trançado e PVC', 'Alta durabilidade e blindagem dupla', 'Preto', NULL, 1, 79.90, 20.00, 'cabo_p10_5m.jpg'),

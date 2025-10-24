@@ -4,6 +4,7 @@ import {
   create,
   update,
   deleteRecord,
+  executeRawQuery,
 } from '../config/database.js';
 
 const listarProdutos = async () => {
@@ -61,6 +62,30 @@ const buscarProdutosPorTermo = async (termo) => {
   }
 };
 
+const maisVendidos = async () => {
+  try {
+    const sql = `
+      SELECT 
+        p.id_produto,
+        p.nome,
+        p.descricao,
+        p.valor,
+        p.imagem,
+        p.desconto,
+        SUM(iv.quantidade) AS unidades_vendidas
+      FROM item_venda iv
+      JOIN produtos p ON p.id_produto = iv.id_produto
+      GROUP BY p.id_produto, p.nome, p.descricao, p.valor, p.imagem, p.desconto
+      ORDER BY unidades_vendidas DESC
+      LIMIT 3;
+    `;
+    return await executeRawQuery(sql);
+  } catch (err) {
+    console.error('Erro ao buscar produtos mais vendidos: ', err);
+    throw err;
+  }
+};
+
 export {
   listarProdutos,
   obterProdutoPorId,
@@ -68,4 +93,5 @@ export {
   atualizarProduto,
   excluirProduto,
   buscarProdutosPorTermo,
+  maisVendidos,
 };

@@ -49,7 +49,6 @@ const data = {
       title: "Cordas",
       url: "#",
       icon: Guitar,
-      isActive: true,
       items: [
         { title: "Violão", url: "#" },
         { title: "Guitarra", url: "#" },

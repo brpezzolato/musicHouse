@@ -6,6 +6,7 @@ import {
   atualizarProdutoController,
   excluirProdutoController,
   listarProdutosBuscaController,
+  maisVendidosController,
 } from '../controllers/ProdutoController.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
 import multer from 'multer';
@@ -29,6 +30,7 @@ const upload = multer({ storage: storage });
 
 router.get('/', listarProdutosController);
 router.get('/busca', listarProdutosBuscaController);
+router.get('/hypados', maisVendidosController);
 router.get('/:id', obterProdutoPorIdController);
 router.post('/', upload.single('imagem'), criarProdutoController);
 router.put('/:id', atualizarProdutoController);

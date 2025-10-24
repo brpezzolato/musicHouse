@@ -30,8 +30,6 @@ const obterCategoriaPorIdController = async (req, res) => {
     }
 }
 
-
-
 const criarCategoriaController = async (req, res) => {
     try {
         const { nome, descricao} = req.body;
