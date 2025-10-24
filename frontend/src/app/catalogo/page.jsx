@@ -66,7 +66,11 @@ export default function Page() {
             <SidebarTrigger className="mr-2 bg-white text-[#c1121f] p-7 rounded-lg border border-transparent focus:outline-none focus:ring-2 focus:ring-[#c1121f]/60 hover:ring-2 hover:ring-[#c1121f]/40 hover:shadow-[0_0_12px_2px_rgba(193,18,31,0.3)] hover:bg-white hover:text-[#780000] focus:bg-whiteactive:bg-white transition-all duration-300" />
 
             <Breadcrumb className="flex-1">
-              <form className="w-full mx-auto">
+              <form
+                className="w-full mx-auto"
+                action="/catalogo/busca"
+                // method="GET"
+              >
                 <div className="relative">
                   <button
                     type="submit"
@@ -90,6 +94,7 @@ export default function Page() {
 
                   <input
                     type="search"
+                    name="termo"
                     id="search"
                     placeholder="Buscar instrumentos, marcas..."
                     className="block w-full rounded-lg border border-transparent bg-white p-4 pl-12 text-sm text-[#c1121f] placeholder-[#c1121f]/80 focus:outline-none focus:ring-2 focus:ring-[#c1121f]/60 hover:ring-2 hover:ring-[#c1121f]/40 hover:shadow-[0_0_12px_2px_rgba(193,18,31,0.3)] transition-all duration-300"
