@@ -2,16 +2,23 @@
 
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { AppSidebar } from '@/components/app-sidebar';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import Produtos from '@/components/Produtos/Produtos';
+import FooterCatalogo from '@/components/FooterCatalogo/FooterCatalogo';
+import BuscaSkeleton from '@/components/Skeleton/Busca';
+import InputBusca from '@/components/InputBusca/InputBusca';
 
 export default function Busca() {
   const searchParams = useSearchParams();
   const valorBuscado = searchParams.get('termo');
   const [resultado, setResultado] = useState([]);
+  const [carregando, setCarregando] = useState(true);
 
   useEffect(() => {
     // const tipo = getCookie('funcao');
     // const token = getCookie('token');
-    fetch(`http://localhost:8080/meusChamados?termo=${valorBuscado}`, {
+    fetch(`http://localhost:8080/produtos/busca?termo=${valorBuscado}`, {
       headers: {
         'Content-Type': 'application/json',
         // Authorization: `Bearer ${token}`,
@@ -20,34 +27,69 @@ export default function Busca() {
       .then((response) => response.json())
       .then((informacao) => {
         setResultado(informacao);
+        setCarregando(false);
       })
       .catch((error) => console.error('Erro ao buscar produtos:', error));
   }, [valorBuscado]);
 
-  // function exibirResultado() {
-  //   if (resultado.length > 0) {
-  //     return (
-  //       <div className="d-flex flex-wrap gap-5 justify-content-center pt-5">
-  //         {resultado.map((item, index) => (
-  //           <Card key={index} item={item} />
-  //         ))}
-  //       </div>
-  //     );
-  //   } else {
-  //     return (
-  //       <div className="d-flex justify-content-center align-items-center nao-encontrado">
-  //         <h2>
-  //           <span>Nenhum</span> filme encontrado, desculpe.
-  //         </h2>
-  //       </div>
-  //     );
-  //   }
-  // }
-
   return (
     <>
-      <h1>{valorBuscado}</h1>
-      <div>{resultado}</div>
+      <SidebarProvider>
+        <AppSidebar />
+        <SidebarInset className="bg-[#f3f3f3] overflow-x-hidden transition-all duration-300">
+          <InputBusca />
+          {carregando === true ? (
+            <>
+              <div className="mt-7 mb-15">
+                <BuscaSkeleton />
+              </div>
+            </>
+          ) : (
+            <div className="">
+              {resultado.length > 0 ? (
+                <div>
+                  <div className="ms-[4%] mt-7">
+                    <h1 className="text-4xl font-medium mb-2">
+                      Você buscou por{' '}
+                      <span className="text-[#c1121f]">"{valorBuscado}"</span>
+                    </h1>
+                    <p className="italic mb-5">
+                      {resultado.length}{' '}
+                      {resultado.length === 1
+                        ? 'Resultado encontrado'
+                        : 'Resultados encontrados'}
+                    </p>
+                  </div>
+                  <div className="sm:ms-[0%] ms-[4%]">
+                    <Produtos produtos={resultado} />
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="ms-[4%]">
+                    <h1 className="text-4xl font-medium mb-2">
+                      Você buscou por{' '}
+                      <span className="text-[#c1121f]">"{valorBuscado}"</span>
+                    </h1>
+                    <p className="italic">
+                      {resultado.length}{' '}
+                      {resultado.length === 1
+                        ? 'Resultado encontrado'
+                        : 'Resultados encontrados'}
+                    </p>
+                  </div>
+                  <div className="flex justify-center items-center mb-15 mt-1">
+                    <div className="w-90">
+                      <img src="/busca/semProdutos.png" alt="" />
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+          <FooterCatalogo />
+        </SidebarInset>
+      </SidebarProvider>
     </>
   );
 }

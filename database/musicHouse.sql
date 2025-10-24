@@ -102,16 +102,9 @@ CREATE TABLE categorias (
     icone TEXT NOT NULL
 );
 
-CREATE TABLE estoque (
-    id_estoque INT AUTO_INCREMENT PRIMARY KEY,
-    id_franquia INT NOT NULL,
-    id_produto INT NOT NULL,
-    quantidade INT NOT NULL DEFAULT 0,
-    minimo INT NOT NULL DEFAULT 0,
-    UNIQUE KEY uq_estoque (id_franquia, id_produto),
-    CONSTRAINT fk_est_franquia FOREIGN KEY (id_franquia) REFERENCES franquias(id_franquia),
-    CONSTRAINT fk_est_prod FOREIGN KEY (id_produto) REFERENCES produtos(id_produto)
-) ;
+INSERT INTO categorias (nome, descricao, icone) VALUES
+('Instrumentos Musicais', 'Categoria que abrange todos os tipos de instrumentos e acessórios musicais, incluindo cordas, teclas, percussão e áudio profissional.', 'icone_instrumentos.png');
+
 
 CREATE TABLE produtos (
     id_produto INT AUTO_INCREMENT PRIMARY KEY,
@@ -127,6 +120,17 @@ CREATE TABLE produtos (
     imagem TEXT NOT NULL,
     CONSTRAINT fk_prod_categoria FOREIGN KEY (id_categoria) REFERENCES categorias(id_categoria)
 );
+
+CREATE TABLE estoque (
+    id_estoque INT AUTO_INCREMENT PRIMARY KEY,
+    id_franquia INT NOT NULL,
+    id_produto INT NOT NULL,
+    quantidade INT NOT NULL DEFAULT 0,
+    minimo INT NOT NULL DEFAULT 0,
+    UNIQUE KEY uq_estoque (id_franquia, id_produto),
+    CONSTRAINT fk_est_franquia FOREIGN KEY (id_franquia) REFERENCES franquias(id_franquia),
+    CONSTRAINT fk_est_prod FOREIGN KEY (id_produto) REFERENCES produtos(id_produto)
+) ;
 
 CREATE TABLE variacoes_produto (
     id_variacao INT AUTO_INCREMENT PRIMARY KEY,
