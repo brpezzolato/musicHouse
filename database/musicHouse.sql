@@ -99,16 +99,18 @@ CREATE TABLE categorias (
     id_categoria INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(200) NOT NULL UNIQUE,
     descricao VARCHAR(300) NOT NULL,
-    icone TEXT NOT NULL
+    icone TEXT NOT NULL,
+    iconeSite TEXT NOT NULL
 );
 
-INSERT INTO categorias (nome, descricao, icone) VALUES 
-('Cordas', 'Toque que emociona.', 'iconCordas.png'),
-('Percussão', 'Ritmo que pulsa.', 'iconPercussao.png'),
-('Teclas', 'Na pontas dos dedos.', 'iconTeclas.png'),
-('Sopro', 'Som que vem do fôlego.', 'iconSopro.png'),
-('Áudio', 'Clareza em cada nota.', 'iconAudio.png'),
-('Acessórios', 'O apoio do seu som.', 'iconAcessorio.png');
+INSERT INTO categorias (nome, descricao, icone, iconeSite) VALUES 
+('Cordas', 'Toque que emociona.', 'iconCordas.png', 'Guitar'),
+('Percussão', 'Ritmo que pulsa.', 'iconPercussao.png', 'Drum'),
+('Teclas', 'Na pontas dos dedos.', 'iconTeclas.png', 'Piano'),
+('Sopro', 'Som que vem do fôlego.', 'iconSopro.png', 'AudioLines'),
+('Foles', 'Som do ar em movimento.', 'iconFoles.png', 'Wind'),
+('Áudio', 'Clareza em cada nota.', 'iconAudio.png', 'Speaker'),
+('Acessórios', 'O apoio do seu som.', 'iconAcessorio.png', 'Plug');
 
 CREATE TABLE produtos (
     id_produto INT AUTO_INCREMENT PRIMARY KEY,
