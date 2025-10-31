@@ -86,6 +86,15 @@ const maisVendidos = async () => {
   }
 };
 
+const listarProdutosPorCategoria = async (id_categoria) => {
+  try {
+    return await readAll('produtos', `id_categoria = ${id_categoria}`);
+  } catch (err) {
+    console.error('Erro ao listar produtos: ', err);
+    throw err;
+  }
+};
+
 export {
   listarProdutos,
   obterProdutoPorId,
@@ -94,4 +103,5 @@ export {
   excluirProduto,
   buscarProdutosPorTermo,
   maisVendidos,
+  listarProdutosPorCategoria,
 };

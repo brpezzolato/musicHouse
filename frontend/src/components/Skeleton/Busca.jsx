@@ -11,7 +11,35 @@ export default function BuscaSkeleton() {
           </div>
         </div>
       </div>
-      <div className="flex justify-center items-center flex-wrap flex-col md:flex-row gap-y-14 md:gap-x-[7%]">
+      <div className="flex ms-[4%] justify-left items-center flex-wrap flex-col md:flex-row gap-y-14 md:gap-x-[5%]">
+        <div className="flex flex-col space-y-3">
+          <Skeleton className="h-60 w-[250px] rounded-xl" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-[250px]" />
+            <Skeleton className="h-4 w-[200px]" />
+          </div>
+        </div>
+        <div className="flex flex-col space-y-3">
+          <Skeleton className="h-60 w-[250px] rounded-xl" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-[250px]" />
+            <Skeleton className="h-4 w-[200px]" />
+          </div>
+        </div>
+        <div className="flex flex-col space-y-3">
+          <Skeleton className="h-60 w-[250px] rounded-xl" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-[250px]" />
+            <Skeleton className="h-4 w-[200px]" />
+          </div>
+        </div>
+        <div className="flex flex-col space-y-3">
+          <Skeleton className="h-60 w-[250px] rounded-xl" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-[250px]" />
+            <Skeleton className="h-4 w-[200px]" />
+          </div>
+        </div>
         <div className="flex flex-col space-y-3">
           <Skeleton className="h-60 w-[250px] rounded-xl" />
           <div className="space-y-2">

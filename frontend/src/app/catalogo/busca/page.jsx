@@ -67,7 +67,7 @@ export default function Busca() {
                         style={{ paddingTop: '0' }}
                       >
                         <div className="mx-auto max-w-screen-xl px-6 ps-0">
-                          <div className="flex flex-wrap justify-center md:justify-start gap-6">
+                          <div className="flex flex-wrap justify-center md:justify-start gap-y-14 md:gap-x-[5%]">
                             <Produtos produtos={resultado} />
                           </div>
                         </div>

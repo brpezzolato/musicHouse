@@ -5,7 +5,7 @@ export default function FooterCatalogo() {
         <div className="w-full mx-auto max-w-screen-xl p-6 md:flex md:items-center md:justify-between">
           <span className="text-sm text-white sm:text-center dark:text-white">
             © 2025{' '}
-            <a href="https://flowbite.com/" className="hover:underline">
+            <a href="/catalogo/copyright" className="hover:underline">
               Music House™
             </a>
             . All Rights Reserved.

@@ -8,6 +8,7 @@ import {
   obterProdutoPorId,
   buscarProdutosPorTermo,
   maisVendidos,
+  listarProdutosPorCategoria,
 } from '../models/Produtos.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -163,6 +164,17 @@ const maisVendidosController = async (req, res) => {
   }
 };
 
+const listarProdutosPorCategoriaController = async (req, res) => {
+  try {
+    const id_categoria = req.query.categoria;
+    const produtos = await listarProdutosPorCategoria(Number(id_categoria));
+    res.status(200).json(produtos);
+  } catch (err) {
+    console.error('Erro ao listar produtos: ', err);
+    res.status(500).json({ menssagem: 'Erro ao listar produtos' });
+  }
+};
+
 export {
   listarProdutosController,
   obterProdutoPorIdController,
@@ -171,4 +183,5 @@ export {
   excluirProdutoController,
   listarProdutosBuscaController,
   maisVendidosController,
+  listarProdutosPorCategoriaController,
 };

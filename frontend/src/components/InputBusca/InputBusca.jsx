@@ -45,7 +45,7 @@ export default function header() {
                 name="termo"
                 id="search"
                 placeholder="Buscar instrumentos, marcas..."
-                className="block w-full rounded-lg border border-transparent bg-white p-4 pl-12 text-sm text-[#c1121f] placeholder-[#c1121f]/80 focus:outline-none focus:ring-2 focus:ring-[#c1121f]/60 focus:bg-[#c1121f]/20 hover:ring-2 hover:ring-[#c1121f]/40 hover:shadow-[0_0_12px_2px_rgba(193,18,31,0.3)] transition-all duration-300"
+                className="block w-full rounded-lg border border-transparent bg-white p-4 pl-12 text-sm text-[#c1121f] placeholder-[#c1121f]/80 focus:outline-none focus:ring-2 focus:ring-[#c1121f]/60 focus:bg-[#fff]/20 hover:ring-2 hover:ring-[#c1121f]/40 hover:shadow-[0_0_12px_2px_rgba(193,18,31,0.3)] transition-all duration-300"
               />
             </div>
           </form>

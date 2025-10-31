@@ -8,6 +8,7 @@ import SvgHype from '@/components/Produtos/svgHype';
 import InputBusca from '@/components/InputBusca/InputBusca';
 import CategoriaCatalogo from '@/components/CategoriaCatalogo/CategoriaCatalogo';
 import { useState, useEffect } from 'react';
+import PageCatalogo from '@/components/Skeleton/PageCatalogo';
 
 export default function Page() {
   const [cards, setCards] = useState([]);
@@ -59,26 +60,33 @@ export default function Page() {
           draggable={false}
         />
         <InputBusca />
+        {carregando === true ? (
+          <div className="">
+            <PageCatalogo />
+          </div>
+        ) : (
+          <>
+            <CategoriaCatalogo cards={cards} />
 
-        <CategoriaCatalogo cards={cards} />
+            <div className="mb-10">
+              <h2 className="text-center text-2xl font-bold text-gray-800 lg:text-3xl">
+                Instrumentos{' '}
+                <span className="text-[#c1121f] ">mais hypados</span>
+                <span>
+                  <SvgHype />
+                </span>
+              </h2>
 
-        <div className="mb-10">
-          <h2 className="text-center text-2xl font-bold text-gray-800 lg:text-3xl">
-            Instrumentos <span className="text-[#c1121f] ">mais hypados</span>
-            <span>
-              <SvgHype />
-            </span>
-          </h2>
+              <p className="mx-auto max-w-screen-md text-center text-gray-600 md:text-lg ">
+                Veja aqui nossos principais instrumentos
+              </p>
+            </div>
 
-          <p className="mx-auto max-w-screen-md text-center text-gray-600 md:text-lg ">
-            Veja aqui nossos principais instrumentos
-          </p>
-        </div>
-
-        <div className="flex flex-wrap justify-center gap-6 mb-16">
-          <Produtos produtos={maisVendidos} />
-        </div>
-
+            <div className="flex flex-wrap justify-center gap-6 mb-16">
+              <Produtos produtos={maisVendidos} />
+            </div>
+          </>
+        )}
         <FooterCatalogo />
       </SidebarInset>
     </SidebarProvider>
