@@ -25,6 +25,15 @@ const obterProdutoPorId = async (id_produto) => {
   }
 };
 
+const obterVariacoesPorProdutoId = async (id_produto) => {
+  try {
+    return await readAll('variacoes_produto', `id_produto = ${id_produto}`);
+  } catch (err) {
+    console.error('Erro ao obter variacoes do produto por ID: ', err);
+    throw err;
+  }
+};
+
 const criarProduto = async (produtoData) => {
   try {
     return await create('produtos', produtoData);
@@ -104,4 +113,5 @@ export {
   buscarProdutosPorTermo,
   maisVendidos,
   listarProdutosPorCategoria,
+  obterVariacoesPorProdutoId,
 };

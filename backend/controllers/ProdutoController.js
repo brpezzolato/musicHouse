@@ -9,7 +9,9 @@ import {
   buscarProdutosPorTermo,
   maisVendidos,
   listarProdutosPorCategoria,
+  obterVariacoesPorProdutoId,
 } from '../models/Produtos.js';
+import { obterCategoriaPorId } from '../models/CategoriasProdutos.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -40,6 +42,63 @@ const obterProdutoPorIdController = async (req, res) => {
     const produto = await obterProdutoPorId(req.params.id);
     if (produto) {
       res.json(produto);
+    } else {
+      res.status(404).json({ mensagem: `Produto não encontrado` });
+    }
+  } catch (err) {
+    console.error('Erro ao obter produto por ID: ', err);
+    res.status(500).json({ menssagem: 'Erro ao obter produto por ID' });
+  }
+};
+
+const obterProdutoPorIdCatalogoController = async (req, res) => {
+  try {
+    const produto = await obterProdutoPorId(req.params.id);
+    const produtoVariacao = await obterVariacoesPorProdutoId(req.params.id);
+    const categoria = await obterCategoriaPorId(produto.id_categoria);
+    // OBJETO FORMATADO PARA O FRONT-END RECEBER FACILITADO
+    if (produto) {
+      const produtoFormatado = {
+        name: produto.nome,
+        price: parseInt(produto.valor).toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+        }),
+        href: `/catalogo/produto/${produto.id_produto}`,
+        breadcrumbs: [
+          { id: 1, name: 'Home', href: '/catalogo' },
+          {
+            id: 2,
+            name: categoria.nome,
+            href: `/catalogo/categoria/${categoria.id_categoria}`,
+          },
+        ],
+        colors: [
+          {
+            id: 0,
+            name: produto.nome_cor,
+            classes: `checked:outline-gray-400`,
+            cor: produto.cor,
+            outOfStock: false,
+          },
+          ...produtoVariacao.map((variacao) => ({
+            id: variacao.id_variacao,
+            name: variacao.nome_cor,
+            cor: variacao.cor,
+            classes: `checked:outline-gray-400`,
+            outOfStock: false,
+          })),
+        ],
+        highlights: produto.materiais
+          .split(',')
+          .map((materiais) => materiais.trim()),
+        details: produto.detalhes,
+        description: produto.descricao,
+        slides: produto.imagem.split(',').map((imagem) => imagem.trim()),
+      };
+
+      res.status(200).json(produtoFormatado);
+      console.log(produtoFormatado);
     } else {
       res.status(404).json({ mensagem: `Produto não encontrado` });
     }
@@ -184,4 +243,5 @@ export {
   listarProdutosBuscaController,
   maisVendidosController,
   listarProdutosPorCategoriaController,
+  obterProdutoPorIdCatalogoController,
 };

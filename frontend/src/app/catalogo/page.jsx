@@ -2,17 +2,16 @@
 
 import { AppSidebar } from '@/components/app-sidebar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-import Produtos from '@/components/Produtos/Produtos';
 import FooterCatalogo from '@/components/FooterCatalogo/FooterCatalogo';
 import SvgHype from '@/components/Produtos/svgHype';
 import InputBusca from '@/components/InputBusca/InputBusca';
 import CategoriaCatalogo from '@/components/CategoriaCatalogo/CategoriaCatalogo';
 import { useState, useEffect } from 'react';
 import PageCatalogo from '@/components/Skeleton/PageCatalogo';
+import MaisVendidos from '@/components/MaisVendidos/MaisVendidos';
 
 export default function Page() {
   const [cards, setCards] = useState([]);
-  const [maisVendidos, setMaisVendidos] = useState([]);
   const [carregando, setCarregando] = useState(true);
 
   useEffect(() => {
@@ -27,23 +26,6 @@ export default function Page() {
       .then((response) => response.json())
       .then((informacao) => {
         setCards(informacao);
-        setCarregando(false);
-      })
-      .catch((error) => console.error('Erro ao buscar produtos:', error));
-  }, []);
-
-  useEffect(() => {
-    // const tipo = getCookie('funcao');
-    // const token = getCookie('token');
-    fetch(`http://localhost:8080/produtos/hypados`, {
-      headers: {
-        'Content-Type': 'application/json',
-        // Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((informacao) => {
-        setMaisVendidos(informacao);
         setCarregando(false);
       })
       .catch((error) => console.error('Erro ao buscar produtos:', error));
@@ -83,7 +65,7 @@ export default function Page() {
             </div>
 
             <div className="flex flex-wrap justify-center gap-6 mb-16">
-              <Produtos produtos={maisVendidos} />
+              <MaisVendidos />
             </div>
           </>
         )}

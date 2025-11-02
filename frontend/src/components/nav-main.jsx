@@ -23,7 +23,7 @@ export function NavMain({
 }) {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Categoria do instrumento</SidebarGroupLabel>
+      <SidebarGroupLabel className="text-[13px] mb-1">Categorias Your House Your Vibe</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible

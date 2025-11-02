@@ -10,17 +10,35 @@ import {
   SidebarHeader,
   SidebarRail,
 } from '@/components/ui/sidebar';
+import SkeletonNav from './Skeleton/Nav';
 
 export function AppSidebar({ ...props }) {
-  const [categorias, setCategorias] = useState([]);
+  const [navBar, setNavBar] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  async function caregarItens() {
+    try {
+      const response = await fetch('http://localhost:8080/navbar');
+
+      if (response.ok) {
+        const data = await response.json();
+        const icones = data.map((item, index) => ({
+          ...item,
+          icon: Icons[item.icon] || Icons.Circle,
+          isActive: index === 0,
+        }));
+        setNavBar(icones);
+        setLoading(false);
+      } else {
+        console.log('Erro ao carregar categorias');
+      }
+    } catch (error) {
+      console.log('Erro ao carregar categorias:', error);
+    }
+  }
 
   useEffect(() => {
-    async function loadCategorias() {
-      const res = await fetch('http://localhost:8080/categorias/produtos');
-      const data = await res.json();
-      setCategorias(data);
-    }
-    loadCategorias();
+    caregarItens();
   }, []);
 
   const data = {
@@ -40,28 +58,36 @@ export function AppSidebar({ ...props }) {
         plan: 'catálogo',
       },
     ],
-    navMain: categorias.map((cat) => ({
-      title: cat.nome,
-      url: `catalogo/categoria/${cat.id}`,
-      icon: Icons[cat.iconeSite],
-      items: (cat.produtos || []).map((prod) => ({
-        title: prod.nome,
-        url: `catalogo/produto/${prod.id}`,
-      })),
-    })),
+    navMain: navBar,
   };
 
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
-      </SidebarHeader>
+    <>
+      {loading === true ? (
+        <>
+          <Sidebar collapsible="icon" {...props}>
+            <SidebarHeader>
+              <TeamSwitcher teams={data.teams} />
+            </SidebarHeader>
 
-      <SidebarContent>
-        <NavMain items={data.navMain} />
-      </SidebarContent>
+            <SkeletonNav />
 
-      <SidebarRail />
-    </Sidebar>
+            <SidebarRail />
+          </Sidebar>
+        </>
+      ) : (
+        <Sidebar collapsible="icon" {...props}>
+          <SidebarHeader>
+            <TeamSwitcher teams={data.teams} />
+          </SidebarHeader>
+
+          <SidebarContent>
+            <NavMain items={data.navMain} />
+          </SidebarContent>
+
+          <SidebarRail />
+        </Sidebar>
+      )}
+    </>
   );
 }

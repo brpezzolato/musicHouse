@@ -8,6 +8,7 @@ import {
   listarProdutosBuscaController,
   maisVendidosController,
   listarProdutosPorCategoriaController,
+  obterProdutoPorIdCatalogoController,
 } from '../controllers/ProdutoController.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
 import multer from 'multer';
@@ -31,6 +32,7 @@ const upload = multer({ storage: storage });
 
 router.get('/', listarProdutosController);
 router.get('/busca', listarProdutosBuscaController);
+router.get('/catalogo/:id', obterProdutoPorIdCatalogoController);
 router.get('/categoria', listarProdutosPorCategoriaController);
 router.get('/hypados', maisVendidosController);
 router.get('/:id', obterProdutoPorIdController);

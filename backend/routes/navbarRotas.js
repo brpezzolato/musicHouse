@@ -3,7 +3,6 @@ import { listarCategoriasComProdutosController } from '../controllers/NavbarCont
 
 const router = express.Router();
 
-// Endpoint único que retorna categorias com produtos
 router.get('/', listarCategoriasComProdutosController);
 
 export default router;

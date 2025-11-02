@@ -118,6 +118,7 @@ CREATE TABLE produtos (
     descricao VARCHAR(300) NOT NULL,
     materiais VARCHAR(300) NOT NULL,
     detalhes VARCHAR(300) NOT NULL,
+    nome_cor VARCHAR(70) NOT NULL,
     cor VARCHAR(70) NOT NULL,
     desconto VARCHAR(50) NULL,
     id_categoria INT NOT NULL,
@@ -125,6 +126,19 @@ CREATE TABLE produtos (
     custo_producao DECIMAL(10,2),
     imagem TEXT NOT NULL,
     CONSTRAINT fk_prod_categoria FOREIGN KEY (id_categoria) REFERENCES categorias(id_categoria)
+);
+
+CREATE TABLE variacoes_produto (
+    id_variacao INT AUTO_INCREMENT PRIMARY KEY,
+    id_produto INT NOT NULL,
+    nome_cor VARCHAR(150) NOT NULL,
+    cor TEXT NOT NULL,
+    imagem TEXT,
+    status ENUM('Ativo', 'Inativo') DEFAULT 'Ativo',
+    data_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_var_prod FOREIGN KEY (id_produto) 
+        REFERENCES produtos(id_produto)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE estoque (
@@ -137,20 +151,6 @@ CREATE TABLE estoque (
     CONSTRAINT fk_est_franquia FOREIGN KEY (id_franquia) REFERENCES franquias(id_franquia),
     CONSTRAINT fk_est_prod FOREIGN KEY (id_produto) REFERENCES produtos(id_produto)
 ) ;
-
-CREATE TABLE variacoes_produto (
-    id_variacao INT AUTO_INCREMENT PRIMARY KEY,
-    id_produto INT NOT NULL,
-    nome_variacao VARCHAR(150) NOT NULL,
-    cor TEXT,
-    estoque INT DEFAULT 0,
-    imagem TEXT,
-    status ENUM('Ativo', 'Inativo') DEFAULT 'Ativo',
-    data_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_var_prod FOREIGN KEY (id_produto) 
-        REFERENCES produtos(id_produto)
-        ON DELETE CASCADE
-);
 
 CREATE TABLE item_venda (
     id_item INT AUTO_INCREMENT PRIMARY KEY,
