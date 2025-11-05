@@ -1,13 +1,16 @@
 import express from 'express';
 import {
   listarFuncionariosController,
+  listarFuncionariosPorFranquiaController,
   obterFuncionarioPorIdController,
   criarFuncionarioController,
 } from '../controllers/FuncionariosController.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
+
 const router = express.Router();
 
 router.get('/', listarFuncionariosController);
+router.get('/franquias/:id', listarFuncionariosPorFranquiaController);
 router.get('/:id', obterFuncionarioPorIdController);
 router.post('/', criarFuncionarioController);
 

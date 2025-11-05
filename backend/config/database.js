@@ -119,4 +119,5 @@ export {
   deleteRecord,
   compare,
   executeRawQuery,
+  getConnection,
 };

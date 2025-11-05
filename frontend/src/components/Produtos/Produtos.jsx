@@ -16,7 +16,7 @@ export default function Page({ produtos }) {
       {produtos.map((produto) => (
         <div key={produto.id_produto} className="relative group">
           <a
-            href={`produto/${produto.id_produto}`}
+            href={`catalogo/produto/${produto.id_produto}`}
             className="block h-64 w-64 overflow-hidden bg-gray-100 rounded relative"
           >
             <img

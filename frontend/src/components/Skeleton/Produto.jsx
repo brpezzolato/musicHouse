@@ -49,7 +49,7 @@ export default function ProdutoSkeleton() {
       </div>
 
       <div className="relative ml-5 mr-5">
-        <Skeleton className="h-100" />
+        <Skeleton className="h-80" />
         <button className="pl-20 pr-20 absolute left-0 top-0 bottom-0 flex items-center justify-center text-gray-300 cursor-wait">
           <svg
             xmlns="http://www.w3.org/2000/svg"

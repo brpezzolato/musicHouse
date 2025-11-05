@@ -1,5 +1,6 @@
 import {
   lerFuncionarios,
+  lerFuncionariosPorFranquia,
   obterFuncionarioPorId,
   criarFuncionario,
 } from '../models/Funcionario.js';
@@ -19,6 +20,35 @@ const listarFuncionariosController = async (req, res) => {
   } catch (err) {
     console.error(`Erro ao listar funcionarios: `, err);
     res.status(500).json({ mensagem: 'Erro ao listar funcionarios' });
+  }
+};
+
+const listarFuncionariosPorFranquiaController = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const { franquiaExiste, funcionarios } = await lerFuncionariosPorFranquia(
+      id
+    );
+
+    if (!franquiaExiste) {
+      return res.status(404).json({
+        mensagem: `A franquia com ID ${id} não existe.`,
+      });
+    }
+
+    if (!funcionarios || funcionarios.length === 0) {
+      return res.status(404).json({
+        mensagem: 'Nenhum funcionário encontrado para esta franquia.',
+      });
+    }
+
+    return res.status(200).json(funcionarios);
+  } catch (err) {
+    console.error(`Erro ao listar funcionários da franquia:`, err);
+    return res
+      .status(500)
+      .json({ mensagem: 'Erro ao listar funcionários da franquia' });
   }
 };
 
@@ -94,6 +124,7 @@ const criarFuncionarioController = async (req, res) => {
 
 export {
   listarFuncionariosController,
+  listarFuncionariosPorFranquiaController,
   obterFuncionarioPorIdController,
   criarFuncionarioController,
 };

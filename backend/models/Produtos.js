@@ -104,6 +104,15 @@ const listarProdutosPorCategoria = async (id_categoria) => {
   }
 };
 
+const listarVariacoes = async () => {
+  try {
+    return await readAll('variacoes_produto');
+  } catch (err) {
+    console.error('Erro ao listar produtos: ', err);
+    throw err;
+  }
+};
+
 export {
   listarProdutos,
   obterProdutoPorId,
@@ -114,4 +123,5 @@ export {
   maisVendidos,
   listarProdutosPorCategoria,
   obterVariacoesPorProdutoId,
+  listarVariacoes
 };

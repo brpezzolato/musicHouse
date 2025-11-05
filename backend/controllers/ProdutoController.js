@@ -3,6 +3,7 @@ import path from 'path';
 import {
   atualizarProduto,
   criarProduto,
+  listarVariacoes,
   excluirProduto,
   listarProdutos,
   obterProdutoPorId,
@@ -12,6 +13,7 @@ import {
   obterVariacoesPorProdutoId,
 } from '../models/Produtos.js';
 import { obterCategoriaPorId } from '../models/CategoriasProdutos.js';
+import generateSku from '../utils/gerarSku.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -23,6 +25,32 @@ const listarProdutosController = async (req, res) => {
   } catch (err) {
     console.error('Erro ao listar produtos: ', err);
     res.status(500).json({ menssagem: 'Erro ao listar produtos' });
+  }
+};
+
+const listarProdutosVariacoesController = async (req, res) => {
+  try {
+    const produtos = await listarProdutos();
+    const variacoes = await listarVariacoes();
+    const variacoesComNomes = [];
+
+    for (const cada of variacoes) {
+      const produtoLido = await obterProdutoPorId(cada.id_produto);
+      variacoesComNomes.push({
+        ...cada,
+        nome: `${produtoLido.nome} (${cada.nome_cor})`,
+        eVariacao: true,
+        id_variacao: cada.id_variacao,
+      });
+    }
+
+    const todos = produtos.concat(variacoesComNomes);
+
+    res.status(200).json(todos);
+    console.log(todos);
+  } catch (err) {
+    console.error('Erro ao listar produtos: ', err);
+    res.status(500).json({ mensagem: 'Erro ao listar produtos' });
   }
 };
 
@@ -77,14 +105,18 @@ const obterProdutoPorIdCatalogoController = async (req, res) => {
           {
             id: 0,
             name: produto.nome_cor,
-            classes: `checked:outline-gray-400`,
+            eVariacao: false,
             cor: produto.cor,
+            classes: `checked:outline-gray-400`,
             outOfStock: false,
           },
           ...produtoVariacao.map((variacao) => ({
             id: variacao.id_variacao,
             name: variacao.nome_cor,
             cor: variacao.cor,
+            imagens:
+              variacao.imagem.split(',').map((imagem) => imagem.trim()) || null,
+            eVariacao: true,
             classes: `checked:outline-gray-400`,
             outOfStock: false,
           })),
@@ -115,6 +147,7 @@ const criarProdutoController = async (req, res) => {
       descricao,
       materiais,
       detalhes,
+      nome_cor,
       cor,
       desconto,
       id_categoria,
@@ -128,22 +161,28 @@ const criarProdutoController = async (req, res) => {
         ''
       );
     }
+
+    const sku = generateSku;
+
     const produtoData = {
+      sku: sku,
       nome: nome || null,
       descricao: descricao || null,
       materiais: materiais || null,
       detalhes: detalhes || null,
+      nome_cor: nome_cor || null,
       cor: cor || null,
       id_categoria: id_categoria || null,
       valor: valor || null,
       desconto: desconto || null,
       custo_producao: custo_producao || null,
-      imagem: imagemProduto || null,
+      imagem: imagemProduto || 'https://placehold.co/500x500',
     };
+
     const produtoId = await criarProduto(produtoData);
     res
       .status(201)
-      .json({ menssagem: 'Produto criado com sucesso', produtoId });
+      .json({ menssagem: 'Produto criado com sucesso', produtoId }).sku = null;
   } catch (error) {
     console.error('Erro ao criar produto:', error);
     res.status(500).json({ menssagem: 'Erro ao criar produto' });
@@ -244,4 +283,5 @@ export {
   maisVendidosController,
   listarProdutosPorCategoriaController,
   obterProdutoPorIdCatalogoController,
+  listarProdutosVariacoesController,
 };

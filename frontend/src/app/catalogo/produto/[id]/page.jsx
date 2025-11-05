@@ -19,6 +19,10 @@ export default function Page() {
   const id = params.id;
   const [produto, setProduto] = useState({});
   const [carregando, setCarregando] = useState(true);
+  const [imagens, setImagens] = useState([]);
+  const [imagensDefault, setImagensDefault] = useState([]);
+  const [nomeCor, setNomecor] = useState();
+  const [nomeCorDefault, setNomeDefault] = useState();
 
   async function carregarProduto() {
     try {
@@ -28,6 +32,10 @@ export default function Page() {
       if (response.ok) {
         const data = await response.json();
         setProduto(data);
+        setImagens(data.slides);
+        setImagensDefault(data.slides);
+        setNomecor(data.colors[0].name);
+        setNomeDefault(data.colors[0].name);
         setCarregando(false);
       } else {
         console.log('Erro no login:', response.statusText);
@@ -37,18 +45,24 @@ export default function Page() {
     }
   }
 
+  async function trocarImagem(eVariacao, imagem, cor) {
+    if (eVariacao === true) {
+      setImagens(imagem);
+      setNomecor(cor);
+    } else {
+      setImagens(imagensDefault);
+      setNomecor(nomeCorDefault);
+    }
+  }
+
   useEffect(() => {
     carregarProduto();
   }, [id]);
 
   const [current, setCurrent] = useState(0);
   const prevSlide = () =>
-    setCurrent(
-      (current - 1 + (produto.slides?.length || 1)) %
-        (produto.slides?.length || 1)
-    );
-  const nextSlide = () =>
-    setCurrent((current + 1) % (produto.slides?.length || 1));
+    setCurrent((current - 1 + (imagens?.length || 1)) % (imagens?.length || 1));
+  const nextSlide = () => setCurrent((current + 1) % (imagens?.length || 1));
 
   const product = {
     name: produto.name,
@@ -122,11 +136,12 @@ export default function Page() {
               <NavProdutos
                 preco={product.price}
                 categoria={product.breadcrumbs[1]?.name}
+                idCategoria={product.breadcrumbs[1]?.id}
               />
 
               <div className="relative w-full overflow-hidden">
                 <img
-                  src={produto.slides?.[current]}
+                  src={imagens?.[current]}
                   alt={`Slide ${current + 1}`}
                   className="h-[calc(600px-30px)] w-full rotate-90 object-contain transition-all duration-500 ease-in-out -mt-30 -mb-30"
                 />
@@ -182,6 +197,13 @@ export default function Page() {
                               defaultChecked={color === product.colors[0]}
                               name="color"
                               type="radio"
+                              onChange={() => {
+                                trocarImagem(
+                                  color.eVariacao,
+                                  color.imagens,
+                                  color.name
+                                );
+                              }}
                               aria-label={color.name}
                               disabled={color.outOfStock}
                               className={`${
@@ -205,7 +227,7 @@ export default function Page() {
 
                     <div className="textos-nome-product">
                       <h1 className="text-2xl italic font-bold tracking-tight uppercase text-gray-900 sm:text-2xl">
-                        {product.name}
+                        {product.name + ` (${nomeCor})`}
                       </h1>
                       <h2 className="text-xs italic tracking-tight text-gray-400 sm:text-xs">
                         {product.description?.length > 60

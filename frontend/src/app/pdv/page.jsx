@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Trash2 } from 'lucide-react';
@@ -14,8 +14,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { ScanLine, CreditCard, Barcode } from 'lucide-react';
+import Select from 'react-select';
 
 export default function PdvHome() {
+  const [formaPgto, setFormaPgto] = useState(null);
+  const [produtosBanco, setProdutosBanco] = useState([]);
+  const [produtoSelecionado, setProdutoSelecionado] = useState(null);
   const [produtos, setProdutos] = useState([
     {
       id: 1,
@@ -115,6 +120,31 @@ export default function PdvHome() {
     },
   ]);
 
+  async function carregarProdutos() {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/produtos/productVariation`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setProdutosBanco(data);
+      } else {
+        console.log('Erro ao carregar produtos:', response.statusText);
+      }
+    } catch (error) {
+      console.log('Erro ao carregar produtos:', error);
+    }
+  }
+
+  useEffect(() => {
+    carregarProdutos();
+  }, []);
+
+  const opcoesProdutos = produtosBanco.map((produto) => ({
+    value: produto.sku,
+    label: `${produto.id_produto} - ${produto.nome} - ${produto.sku}`,
+  }));
+
   const total = produtos.reduce((acc, p) => acc + p.preco * p.qtd, 0);
   const tax = total * 0.05;
   const totalFinal = total + tax;
@@ -134,17 +164,74 @@ export default function PdvHome() {
       `}</style>
 
       <div className="min-h-screen flex flex-col">
-        {/* TOPO */}
         <div className="flex flex-wrap justify-between items-center px-6 md:px-10 pt-6 gap-4">
           <Input
             placeholder="N° OPERADOR: ***000"
-            className="bg-[#f5f5f5]/70 w-full sm:w-64 border-none rounded-none focus-visible:ring-0 focus-visible:ring-offset-0 text-gray-500"
+            className="bg-[#f5f5f5]/70 sm:w-64 border-none rounded-none focus-visible:ring-0 focus-visible:ring-offset-0 text-gray-500"
             disabled
           />
+          <div className="w-80">
+            <Dialog>
+              <form>
+                <DialogTrigger asChild>
+                  <Button className="bg-[var(--vermelho-vivo)] w-full hover:bg-[var(--vermelho-vivo)] hover:opacity-[0.9] cursor-pointer text-white text-base sm:text-lg font-semibold rounded-[15px] py-5 sm:py-6 transition-all">
+                    FECHAR CAIXA
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Fechar o caixa</DialogTitle>
+                    <DialogDescription>
+                      Digite suas informações para fechar o caixa
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="grid gap-4">
+                    <div className="grid gap-3">
+                      <label>Name</label>
+                      <Input
+                        id="name-1"
+                        name="name"
+                        defaultValue="Pedro Duarte"
+                      />
+                    </div>
+                    <div className="grid gap-3">
+                      <label>Username</label>
+                      <Input
+                        id="username-1"
+                        name="username"
+                        defaultValue="@peduarte"
+                      />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <DialogClose asChild>
+                      <Button variant="outline">Cancel</Button>
+                    </DialogClose>
+                    <Button type="submit">Save changes</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </form>
+            </Dialog>
+          </div>
         </div>
 
+        <Select
+          classNamePrefix="select-produto"
+          options={opcoesProdutos}
+          value={
+            opcoesProdutos.find(
+              (option) => option.value === produtoSelecionado
+            ) || null
+          }
+          onChange={(selecionado) => {
+            setProdutoSelecionado(selecionado ? selecionado.value : null);
+          }}
+          placeholder="Escolha um instrumento"
+          isSearchable
+        />
+
         {/* CONTEÚDO PRINCIPAL */}
-        <div className="flex flex-col lg:flex-row flex-1 px-4 md:px-10 py-6 gap-6 md:gap-8">
+        <div className="flex flex-col lg:flex-row flex-1 px-4 md:px-10 py-5 gap-6 md:gap-8">
           {/* COLUNA ESQUERDA */}
           <div className="flex-1 bg-white/95 rounded-md shadow-sm border border-gray-100 p-4 md:p-6 backdrop-blur-sm overflow-hidden">
             <div className="hidden sm:grid grid-cols-3 text-center font-semibold border-b pb-3 text-gray-800">
@@ -192,32 +279,33 @@ export default function PdvHome() {
           </div>
 
           {/* COLUNA DIREITA */}
-          <div className="w-full lg:w-[320px] flex flex-col gap-4">
-            <Input
-              placeholder="Insira o produto"
-              className="bg-[#f5f5f5]/80 border-none rounded-none focus-visible:ring-0 focus-visible:ring-offset-0"
-            />
-            <Button className="bg-black text-white rounded-none hover:bg-neutral-800 hover:opacity-[0.9] cursor-pointer py-5 text-sm sm:text-base">
-              Adicionar Produto
-            </Button>
-
-            <img
-              src="/logos/logoEscritaVermelha.png"
-              alt="Logo Music House"
-              className="w-36 sm:w-48 mx-auto mt-3"
-            />
+          <div className="w-full lg:w-[320px] flex flex-col gap-3">
+            <div className="flex flex-col gap-y-[10px]">
+              <label>Insira o produto: </label>
+              <Input
+                placeholder="Insira o produto"
+                className="bg-[#f5f5f5]/80 border-none rounded-[15px] focus-visible:ring-0 focus-visible:ring-offset-0 py-4"
+              />
+              <Button className="bg-black w-full text-white rounded-[15px] hover:bg-neutral-800 hover:opacity-[0.9] cursor-pointer text-sm sm:text-base">
+                Adicionar Produto
+              </Button>
+            </div>
 
             {/* PRODUTO EM DESTAQUE */}
-            <div className="flex flex-col sm:flex-row items-center gap-3 border border-gray-200 p-3 rounded-md bg-white/90 text-center sm:text-left">
-              <img
-                src="https://placehold.co/40x40?text=Guitarra"
-                className="w-10 h-10 object-contain"
-              />
-              <div>
-                <p className="font-semibold text-sm text-gray-800">Guitarra</p>
-                <p className="text-xs text-gray-500">
-                  Guitarra Fender 62, corpo Maple Wood
-                </p>
+            <div>
+              <div className="flex flex-col sm:flex-row items-center gap-3 border border-gray-200 p-3 rounded-md bg-white/90 text-center sm:text-left">
+                <img
+                  src="https://placehold.co/40x40?text=Guitarra"
+                  className="w-10 h-10 object-contain"
+                />
+                <div>
+                  <p className="font-semibold text-sm text-gray-800">
+                    Guitarra
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    Guitarra Fender 62, corpo Maple Wood
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -240,66 +328,55 @@ export default function PdvHome() {
             </div>
 
             {/* MÉTODOS DE PAGAMENTO */}
-            <div className="flex justify-around mt-2 text-xs sm:text-sm text-gray-600">
-              <div className="flex flex-col items-center cursor-pointer hover:text-[var(--vermelho-vivo)] transition">
-                💵
-                <span>Cash</span>
+            <div className="flex justify-around mt-2 text-xs sm:text-sm text-gray-600 gap-3 ">
+              <div
+                onClick={() => {
+                  setFormaPgto(1);
+                }}
+                className={`flex flex-col w-full bg-[#f7f7f7] pt-2 pb-2 ps-5 pe-5 items-center cursor-pointer hover:border-[var(--vermelho-vivo)] border-2 transition duration-[.3s] rounded-[15px]
+                ${
+                  formaPgto === 1
+                    ? 'border-[var(--vermelho-vivo)]'
+                    : 'border-transparent'
+                }`}
+              >
+                <CreditCard size={16} />
+                <span className="pt-1">Débito</span>
               </div>
-              <div className="flex flex-col items-center cursor-pointer hover:text-[var(--vermelho-vivo)] transition">
-                💳
-                <span>Card</span>
+              <div
+                onClick={() => {
+                  setFormaPgto(2);
+                }}
+                className={`flex flex-col w-full bg-[#f7f7f7] pt-2 pb-2 ps-5 pe-5 items-center cursor-pointer hover:border-[var(--vermelho-vivo)] border-2 transition duration-[.3s] rounded-[15px]
+                ${
+                  formaPgto === 2
+                    ? 'border-[var(--vermelho-vivo)]'
+                    : 'border-transparent'
+                }`}
+              >
+                <CreditCard size={16} />
+                <span className="pt-1">Crédito</span>
               </div>
-              <div className="flex flex-col items-center cursor-pointer hover:text-[var(--vermelho-vivo)] transition">
-                📱
-                <span>QR Code</span>
+              <div
+                onClick={() => {
+                  setFormaPgto(3);
+                }}
+                className={`flex flex-col w-full bg-[#f7f7f7] pt-2 pb-2 ps-5 pe-5 items-center cursor-pointer hover:border-[var(--vermelho-vivo)] border-2 transition duration-[.3s] rounded-[15px]
+                ${
+                  formaPgto === 3
+                    ? 'border-[var(--vermelho-vivo)]'
+                    : 'border-transparent'
+                }`}
+              >
+                <ScanLine size={16} />
+                <span className="pt-1">Pix</span>
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* RODAPÉ */}
-        <div className="w-full bg-[var(--vermelho-vivo)] text-center py-3 sm:py-4">
-          <Dialog>
-            <form>
-              <DialogTrigger asChild>
-                <Button className="bg-[var(--vermelho-vivo)] hover:bg-[var(--vermelho-vivo)] hover:opacity-[0.9] cursor-pointer text-white text-base sm:text-lg font-semibold rounded-none w-full py-5 sm:py-6 transition-all">
-                  FECHAR CAIXA
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Fechar o caixa</DialogTitle>
-                  <DialogDescription>
-                    Digite suas informações para fechar o caixa
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-4">
-                  <div className="grid gap-3">
-                    <label>Name</label>
-                    <Input
-                      id="name-1"
-                      name="name"
-                      defaultValue="Pedro Duarte"
-                    />
-                  </div>
-                  <div className="grid gap-3">
-                    <label>Username</label>
-                    <Input
-                      id="username-1"
-                      name="username"
-                      defaultValue="@peduarte"
-                    />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <DialogClose asChild>
-                    <Button variant="outline">Cancel</Button>
-                  </DialogClose>
-                  <Button type="submit">Save changes</Button>
-                </DialogFooter>
-              </DialogContent>
-            </form>
-          </Dialog>
+            <button className="bg-[var(--vermelho-vivo)] rounded-[15px] text-white p-3">
+              Fechar Pedido
+            </button>
+          </div>
         </div>
       </div>
     </>

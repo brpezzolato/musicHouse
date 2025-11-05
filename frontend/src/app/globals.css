@@ -16,6 +16,7 @@
   --azul-claro: #669bbc;
   --bege-claro: #fdf0d5;
   --branco-suave: #fcf9f7;
+  --borda-padrao: 15px;
   --background: oklch(1 0 0);
   --foreground: oklch(0.1884 0.0128 248.5103);
   --card: oklch(0.9784 0.0011 197.1387);

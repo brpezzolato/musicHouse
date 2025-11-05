@@ -22,14 +22,6 @@ INSERT INTO funcionarios (
 INSERT INTO caixas (id_franquia, id_funcionario, status)
 VALUES (1, 1, 'aberto');
 
--- Produto
-INSERT INTO produtos (
-    nome, descricao, materiais, detalhes, cor, desconto, id_categoria, valor, custo_producao, imagem
-) VALUES (
-    'Violão Acústico Yamaha', 'Violão clássico de 6 cordas de nylon', 'Madeira nobre e cordas de nylon',
-    'Ideal para iniciantes e profissionais', 'Marrom', NULL, 1, 850.00, 500.00, '/imagens/violaoyamaha.png'
-);
-
 -- Estoque (necessário para vendas)
 INSERT INTO estoque (id_franquia, id_produto, quantidade, minimo)
 VALUES (1, 1, 10, 2);

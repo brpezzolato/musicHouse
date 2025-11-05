@@ -1,10 +1,10 @@
-import { create, update } from '../config/database.js';
+import { create, update, readAll, read } from '../config/database.js';
 
 const cadastrarFranquia = async (franquiaData) => {
   try {
     return await create('franquias', franquiaData);
   } catch (error) {
-    console.error('Erro ao criar franquias:', error);
+    console.error('Erro ao criar franquia:', error);
     throw error;
   }
 };
@@ -22,4 +22,27 @@ const atualizarFranquia = async (id_franquia, franquiaData) => {
   }
 };
 
-export { cadastrarFranquia, atualizarFranquia };
+const listarFranquias = async () => {
+  try {
+    return await readAll('franquias');
+  } catch (error) {
+    console.error('Erro ao listar franquias:', error);
+    throw error;
+  }
+};
+
+const listarFranquiaPorId = async (id_franquia) => {
+  try {
+    return await read('franquias', `id_franquia = ${id_franquia}`);
+  } catch (error) {
+    console.error('Erro ao buscar franquia por ID:', error);
+    throw error;
+  }
+};
+
+export {
+  cadastrarFranquia,
+  atualizarFranquia,
+  listarFranquias,
+  listarFranquiaPorId,
+};

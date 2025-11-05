@@ -1,13 +1,15 @@
 import express from 'express';
 import {
+  listarFranquiasController,
   criarFranquiaController,
   editarFranquiaController,
+  listarFranquiaPorIdController,
 } from '../controllers/FranquiasController.js';
-import authMiddleware from '../middlewares/authMiddleware.js';
+
 const router = express.Router();
 
-// router.get('/', listarFuncionariosController);
-// router.get('/:id', obterFuncionarioPorIdController);
+router.get('/', listarFranquiasController);
+router.get('/:id', listarFranquiaPorIdController);
 router.post('/', criarFranquiaController);
 router.put('/:id', editarFranquiaController);
 

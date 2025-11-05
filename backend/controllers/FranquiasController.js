@@ -1,10 +1,37 @@
-import { cadastrarFranquia, atualizarFranquia } from '../models/Franquias.js';
+import {
+  cadastrarFranquia,
+  atualizarFranquia,
+  listarFranquias,
+  listarFranquiaPorId,
+} from '../models/Franquias.js';
+
+const listarFranquiasController = async (req, res) => {
+  try {
+    const franquias = await listarFranquias();
+    res.status(200).json(franquias);
+  } catch (error) {
+    console.error('Erro ao listar franquias:', error);
+    res.status(500).json({ mensagem: 'Erro ao listar franquias' });
+  }
+};
+
+const listarFranquiaPorIdController = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const franquia = await listarFranquiaPorId(id);
+
+    if (!franquia) {
+      return res.status(404).json({ mensagem: 'Franquia não encontrada.' });
+    }
+
+    res.status(200).json(franquia);
+  } catch (error) {
+    console.error('Erro ao obter franquia por ID:', error);
+    res.status(500).json({ mensagem: 'Erro ao buscar franquia.' });
+  }
+};
 
 const criarFranquiaController = async (req, res) => {
-  // if (!req.usuario.id) {
-  //   return res.status(401).json({ mensagem: 'Usuário não autenticado' });
-  // }
-
   try {
     const {
       codigo_postal,
@@ -24,7 +51,7 @@ const criarFranquiaController = async (req, res) => {
 
     const franquiaId = await cadastrarFranquia(franquiaData);
     res.status(201).json({
-      mensagem: 'Franquia Criado com sucesso !!!',
+      mensagem: 'Franquia criada com sucesso!',
       franquiaId,
     });
   } catch (error) {
@@ -34,27 +61,23 @@ const criarFranquiaController = async (req, res) => {
 };
 
 const editarFranquiaController = async (req, res) => {
-  // if (!req.usuarioId) {
-  //   return res.status(401).json({ mensagem: 'Usuário não autenticado' });
-  // }
-
   try {
     const id_franquia = req.params.id;
-
     const { email_contato, telefone_contato, status } = req.body;
 
-    const franquiaData = {
-      email_contato,
-      telefone_contato,
-      status,
-    };
-
+    const franquiaData = { email_contato, telefone_contato, status };
     await atualizarFranquia(id_franquia, franquiaData);
+
     res.status(200).json({ mensagem: 'Franquia atualizada com sucesso.' });
   } catch (error) {
-    console.error('Erro ao atualizar chamado:', error);
+    console.error('Erro ao atualizar franquia:', error);
     res.status(500).json({ mensagem: 'Erro ao atualizar franquia' });
   }
 };
 
-export { criarFranquiaController, editarFranquiaController };
+export {
+  listarFranquiasController,
+  criarFranquiaController,
+  editarFranquiaController,
+  listarFranquiaPorIdController,
+};

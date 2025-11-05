@@ -21,14 +21,11 @@ INSERT INTO franquias (
     email_contato,
     telefone_contato,
     status
-) VALUES (
-    '04567-123',
-    'Av. Paulista, 1000 - Bela Vista',
-    'São Paulo',
-    'contato@vidaplena-sp.com',
-    '(11) 99999-8888',
-    'Ativo'
-);
+) VALUES ('01000-000'
+, 'Av. Paulista, 1000 - Bela Vista',
+ 'São Paulo - SP', 'sp@musichouse.com.br',
+ '(11) 98888-1000', 
+ 'Ativo');
 
 CREATE TABLE credenciais (
     id_credenciais INT AUTO_INCREMENT PRIMARY KEY,
@@ -114,6 +111,7 @@ INSERT INTO categorias (nome, descricao, icone, iconeSite) VALUES
 
 CREATE TABLE produtos (
     id_produto INT AUTO_INCREMENT PRIMARY KEY,
+    sku TEXT NOT NULL UNIQUE,
     nome VARCHAR(200) NOT NULL,
     descricao VARCHAR(300) NOT NULL,
     materiais VARCHAR(300) NOT NULL,
@@ -130,6 +128,7 @@ CREATE TABLE produtos (
 
 CREATE TABLE variacoes_produto (
     id_variacao INT AUTO_INCREMENT PRIMARY KEY,
+    sku TEXT NOT NULL UNIQUE,
     id_produto INT NOT NULL,
     nome_cor VARCHAR(150) NOT NULL,
     cor TEXT NOT NULL,
