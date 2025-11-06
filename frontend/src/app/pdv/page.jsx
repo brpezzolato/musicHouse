@@ -14,111 +14,19 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { ScanLine, CreditCard, Barcode } from 'lucide-react';
+import { ScanLine, CreditCard } from 'lucide-react';
 import Select from 'react-select';
+import { CollapsibleTrigger } from '@radix-ui/react-collapsible';
+import { no } from 'zod/v4/locales';
 
 export default function PdvHome() {
   const [formaPgto, setFormaPgto] = useState(null);
   const [produtosBanco, setProdutosBanco] = useState([]);
   const [produtoSelecionado, setProdutoSelecionado] = useState(null);
-  const [produtos, setProdutos] = useState([
-    {
-      id: 1,
-      nome: 'Guitarra',
-      preco: 900,
-      qtd: 1,
-      img: 'https://placehold.co/40x40?text=Guitarra',
-      desc: 'Guitarra Fender 62, corpo Maple Wood',
-    },
-    {
-      id: 2,
-      nome: 'Microfone',
-      preco: 100,
-      qtd: 1,
-      img: 'https://placehold.co/40x40?text=Microfone',
-      desc: 'Microfone de qualidade para voz e instrumentos',
-    },
-    {
-      id: 3,
-      nome: 'Bateria',
-      preco: 900,
-      qtd: 1,
-      img: 'https://placehold.co/40x40?text=Bateria',
-      desc: 'Bateria Pearl 26, corpo Maple Wood',
-    },
-    {
-      id: 4,
-      nome: 'Baixo',
-      preco: 1200,
-      qtd: 1,
-      img: 'https://placehold.co/40x40?text=Baixo',
-      desc: 'Baixo Fender Jazz Bass 70s',
-    },
-    {
-      id: 5,
-      nome: 'Teclado',
-      preco: 1500,
-      qtd: 1,
-      img: 'https://placehold.co/40x40?text=Teclado',
-      desc: 'Teclado Yamaha PSR-E373 com 61 teclas sensíveis ao toque',
-    },
-    {
-      id: 6,
-      nome: 'Violão',
-      preco: 800,
-      qtd: 1,
-      img: 'https://placehold.co/40x40?text=Violão',
-      desc: 'Violão Giannini Nylon Clássico',
-    },
-    {
-      id: 7,
-      nome: 'Saxofone',
-      preco: 2500,
-      qtd: 1,
-      img: 'https://placehold.co/40x40?text=Saxofone',
-      desc: 'Saxofone Alto Yamaha YAS-280, acabamento dourado',
-    },
-    {
-      id: 8,
-      nome: 'Violino',
-      preco: 1100,
-      qtd: 1,
-      img: 'https://placehold.co/40x40?text=Violino',
-      desc: 'Violino acústico Stradivarius Student 4/4',
-    },
-    {
-      id: 9,
-      nome: 'Amplificador',
-      preco: 700,
-      qtd: 1,
-      img: 'https://placehold.co/40x40?text=Amplificador',
-      desc: 'Amplificador Fender Frontman 25R 25W',
-    },
-    {
-      id: 10,
-      nome: 'Piano Digital',
-      preco: 3200,
-      qtd: 1,
-      img: 'https://placehold.co/40x40?text=Piano',
-      desc: 'Piano digital Casio CDP-S360 com 88 teclas',
-    },
-    {
-      id: 11,
-      nome: 'Fone de Ouvido',
-      preco: 300,
-      qtd: 1,
-      img: 'https://placehold.co/40x40?text=Fone',
-      desc: 'Fone de ouvido AKG K240 Studio profissional',
-    },
-    {
-      id: 12,
-      nome: 'Pedal de Efeito',
-      preco: 450,
-      qtd: 1,
-      img: 'https://placehold.co/40x40?text=Pedal',
-      desc: 'Pedal Boss DS-1 Distortion clássico para guitarra',
-    },
-  ]);
+  const [produtos, setProdutos] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [ultimoProduto, setUltimoProduto] = useState();
+  const [ultimoTamanho, setUltimoTamanho] = useState(0);
 
   async function carregarProdutos() {
     try {
@@ -138,19 +46,86 @@ export default function PdvHome() {
 
   useEffect(() => {
     carregarProdutos();
+    const carrinho = localStorage.getItem('carrinho');
+    if (carrinho) {
+      setProdutos(JSON.parse(carrinho));
+    }
+    setCarregando(false);
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem('carrinho', JSON.stringify(produtos));
+    setCarregando(false);
+
+    if (produtos.length > ultimoTamanho) {
+      const ultimo = produtos[produtos.length - 1];
+      setUltimoProduto(ultimo);
+    }
+
+    setUltimoTamanho(produtos.length);
+  }, [produtos]);
 
   const opcoesProdutos = produtosBanco.map((produto) => ({
     value: produto.sku,
-    label: `${produto.id_produto} - ${produto.nome} - ${produto.sku}`,
+    label: `${produto.sku} - ${produto.nome}`,
   }));
+
+  async function adicionarProduto() {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/produtos/sku/${produtoSelecionado}`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        const imagem = data.imagem.split(',').map((imagem) => imagem.trim());
+        const jaTem = produtos.find((item) => item.sku === data.sku);
+        if (jaTem) {
+          incrementarMaisQtd(data.sku);
+        } else {
+          const formatado = {
+            id: data.id_produto,
+            sku: data.sku,
+            nome: data.nome,
+            preco: data.valor,
+            qtd: 1,
+            img: imagem[0],
+            desc: data.descricao,
+          };
+          setProdutos((resto) => [...resto, formatado]);
+        }
+      } else {
+        console.log('Erro ao carregar produtos:', response.statusText);
+      }
+    } catch (error) {
+      console.log('Erro ao carregar produtos:', error);
+    }
+  }
+
+  function incrementarMaisQtd(itemId) {
+    const novo = produtos.map((onde) =>
+      onde.sku === itemId ? { ...onde, qtd: onde.qtd + 1 } : onde
+    );
+    const atualizado = novo.find((onde) => onde.sku === itemId);
+
+    setProdutos(novo);
+    setUltimoProduto(atualizado);
+  }
 
   const total = produtos.reduce((acc, p) => acc + p.preco * p.qtd, 0);
   const tax = total * 0.05;
   const totalFinal = total + tax;
 
-  const removerProduto = (id) =>
-    setProdutos(produtos.filter((p) => p.id !== id));
+  function removerProduto(itemId, quantidade) {
+    console.log(quantidade);
+    if (quantidade > 1) {
+      const novo = produtos.map((onde) =>
+        onde.sku === itemId ? { ...onde, qtd: onde.qtd - 1 } : onde
+      );
+      setProdutos(novo);
+    } else if (quantidade === 1) {
+      setProdutos(produtos.filter((p) => p.sku !== itemId));
+    }
+  }
 
   return (
     <>
@@ -162,6 +137,8 @@ export default function PdvHome() {
          background-position: center;
         }
       `}</style>
+
+      {carregando === true ? <h1>cu gostoso</h1> : null}
 
       <div className="min-h-screen flex flex-col">
         <div className="flex flex-wrap justify-between items-center px-6 md:px-10 pt-6 gap-4">
@@ -215,21 +192,6 @@ export default function PdvHome() {
           </div>
         </div>
 
-        <Select
-          classNamePrefix="select-produto"
-          options={opcoesProdutos}
-          value={
-            opcoesProdutos.find(
-              (option) => option.value === produtoSelecionado
-            ) || null
-          }
-          onChange={(selecionado) => {
-            setProdutoSelecionado(selecionado ? selecionado.value : null);
-          }}
-          placeholder="Escolha um instrumento"
-          isSearchable
-        />
-
         {/* CONTEÚDO PRINCIPAL */}
         <div className="flex flex-col lg:flex-row flex-1 px-4 md:px-10 py-5 gap-6 md:gap-8">
           {/* COLUNA ESQUERDA */}
@@ -241,9 +203,9 @@ export default function PdvHome() {
             </div>
 
             <div className="mt-3 flex flex-col gap-3 h-[300px] sm:h-[400px] md:h-[400px] overflow-y-auto">
-              {produtos.map((p) => (
+              {produtos.map((p, index) => (
                 <div
-                  key={p.id}
+                  key={index}
                   className="flex flex-col sm:flex-row sm:items-center justify-between bg-gray-50 rounded-md px-4 py-3 shadow-sm hover:bg-gray-100 transition"
                 >
                   {/* Nome + imagem */}
@@ -257,9 +219,8 @@ export default function PdvHome() {
                     </div>
                   </div>
 
-                  {/* Preço */}
                   <div className="sm:w-1/3 text-left sm:text-center font-medium text-gray-800 text-sm">
-                    R${' '}
+                    R$
                     {p.preco.toLocaleString('pt-BR', {
                       minimumFractionDigits: 2,
                     })}
@@ -270,7 +231,7 @@ export default function PdvHome() {
                     <span className="text-gray-700 text-sm">{p.qtd}</span>
                     <Trash2
                       className="text-red-500 cursor-pointer hover:scale-110 transition"
-                      onClick={() => removerProduto(p.id)}
+                      onClick={() => removerProduto(p.sku, p.qtd)}
                     />
                   </div>
                 </div>
@@ -282,11 +243,30 @@ export default function PdvHome() {
           <div className="w-full lg:w-[320px] flex flex-col gap-3">
             <div className="flex flex-col gap-y-[10px]">
               <label>Insira o produto: </label>
-              <Input
-                placeholder="Insira o produto"
-                className="bg-[#f5f5f5]/80 border-none rounded-[15px] focus-visible:ring-0 focus-visible:ring-offset-0 py-4"
-              />
-              <Button className="bg-black w-full text-white rounded-[15px] hover:bg-neutral-800 hover:opacity-[0.9] cursor-pointer text-sm sm:text-base">
+              {!carregando && (
+                <Select
+                  classNamePrefix="select-produto"
+                  options={opcoesProdutos}
+                  value={
+                    opcoesProdutos.find(
+                      (option) => option.value === produtoSelecionado
+                    ) || null
+                  }
+                  onChange={(selecionado) => {
+                    setProdutoSelecionado(
+                      selecionado ? selecionado.value : null
+                    );
+                  }}
+                  placeholder="Escolha um instrumento"
+                  isSearchable
+                />
+              )}
+              <Button
+                className="bg-black w-full text-white rounded-[15px] hover:bg-neutral-800 hover:opacity-[0.9] cursor-pointer text-sm sm:text-base"
+                onClick={() => {
+                  adicionarProduto();
+                }}
+              >
                 Adicionar Produto
               </Button>
             </div>
@@ -295,15 +275,16 @@ export default function PdvHome() {
             <div>
               <div className="flex flex-col sm:flex-row items-center gap-3 border border-gray-200 p-3 rounded-md bg-white/90 text-center sm:text-left">
                 <img
-                  src="https://placehold.co/40x40?text=Guitarra"
-                  className="w-10 h-10 object-contain"
+                  src={ultimoProduto?.img}
+                  className="w-10 h-10 object-contain flex-shrink-0"
+                  alt="Imagem do produto"
                 />
-                <div>
-                  <p className="font-semibold text-sm text-gray-800">
-                    Guitarra
+                <div className="min-w-0">
+                  <p className="font-semibold text-sm text-gray-800 truncate">
+                    {ultimoProduto?.nome || 'Nome do produto'}
                   </p>
-                  <p className="text-xs text-gray-500">
-                    Guitarra Fender 62, corpo Maple Wood
+                  <p className="text-xs text-gray-500 truncate">
+                    {ultimoProduto?.desc || 'Descrição do produto'}
                   </p>
                 </div>
               </div>

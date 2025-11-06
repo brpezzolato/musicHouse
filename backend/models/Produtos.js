@@ -25,6 +25,24 @@ const obterProdutoPorId = async (id_produto) => {
   }
 };
 
+const obterProdutoPorSku = async (sku) => {
+  try {
+    return await read('produtos', `sku = ${sku}`);
+  } catch (err) {
+    console.error('Erro ao obter produto por Sku: ', err);
+    throw err;
+  }
+};
+
+const obterVariacaoPorSku = async (sku) => {
+  try {
+    return await read('variacoes_produto', `sku = ${sku}`);
+  } catch (err) {
+    console.error('Erro ao obter variação por Sku: ', err);
+    throw err;
+  }
+};
+
 const obterVariacoesPorProdutoId = async (id_produto) => {
   try {
     return await readAll('variacoes_produto', `id_produto = ${id_produto}`);
@@ -123,5 +141,7 @@ export {
   maisVendidos,
   listarProdutosPorCategoria,
   obterVariacoesPorProdutoId,
-  listarVariacoes
+  listarVariacoes,
+  obterProdutoPorSku,
+  obterVariacaoPorSku,
 };

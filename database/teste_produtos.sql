@@ -3,7 +3,7 @@ USE musicHouse;
 #SELECT * FROM funcionarios
 
 INSERT INTO produtos (sku, nome, descricao, materiais, detalhes, nome_cor, cor, desconto, id_categoria, valor, custo_producao, imagem) VALUES
-('000001', 'Violão Clássico Nylon', 'Violão clássico com cordas de nylon, ideal para iniciantesssssssssssssssssssssssssssssssss.', 'Madeira de mogno, cordas de nylon', 'Tarraxas cromadas e acabamento brilhante', 'Natural', '#D2B48C', 'GUITARRA10', 1, 599.90, 320.00, 
+('132321', 'Violão Clássico Nylon', 'Violão clássico com cordas de nylon, ideal para iniciantes.', 'Madeira de mogno, cordas de nylon', 'Tarraxas cromadas e acabamento brilhante', 'Natural', '#D2B48C', 'GUITARRA10', 1, 599.90, 320.00, 
 'https://static.vecteezy.com/system/resources/previews/012/021/474/non_2x/full-view-of-prime-acoustic-guitar-photo.jpg, https://caminhosdoviolao.com.br/wp-content/uploads/2017/09/violao-velho-2.jpg'),
 ('000002', 'Guitarra Elétrica Stratocaster', 'Guitarra com corpo em alder e captação single coil tripla.', 'Corpo em alder, braço em maple', '3 captadores single coil, chave de 5 posições', 'Preta', '#000000', NULL, 1, 2899.00, 1600.00, 'guitarra_strato.jpg'),
 ('000003', 'Baixo Jazz Bass 4 Cordas', 'Baixo elétrico de 4 cordas com timbre encorpado.', 'Corpo em ash, escala em rosewood', '2 captadores single coil', 'Sunburst', '#FF7043', '5%', 1, 3490.00, 1800.00, 'baixo_jazzbass.jpg'),

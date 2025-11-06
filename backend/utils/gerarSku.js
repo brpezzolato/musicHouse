@@ -15,7 +15,7 @@ async function VerBanco(gerado) {
 }
 
 async function generateSku() {
-  const codigo = Math.floor(Math.random() * 900000) + 100000;
+  const codigo = Math.floor(Math.random() * 1000000);
   return await VerBanco(codigo.toString().padStart(6, '0'));
 }
 

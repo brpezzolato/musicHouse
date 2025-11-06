@@ -10,7 +10,9 @@ import {
   buscarProdutosPorTermo,
   maisVendidos,
   listarProdutosPorCategoria,
+  obterProdutoPorSku,
   obterVariacoesPorProdutoId,
+  obterVariacaoPorSku,
 } from '../models/Produtos.js';
 import { obterCategoriaPorId } from '../models/CategoriasProdutos.js';
 import generateSku from '../utils/gerarSku.js';
@@ -70,6 +72,40 @@ const obterProdutoPorIdController = async (req, res) => {
     const produto = await obterProdutoPorId(req.params.id);
     if (produto) {
       res.json(produto);
+    } else {
+      res.status(404).json({ mensagem: `Produto não encontrado` });
+    }
+  } catch (err) {
+    console.error('Erro ao obter produto por ID: ', err);
+    res.status(500).json({ menssagem: 'Erro ao obter produto por ID' });
+  }
+};
+
+const obterProdutoPorSkuController = async (req, res) => {
+  try {
+    const produto = await obterProdutoPorSku(req.params.id);
+    const variacao = await obterVariacaoPorSku(req.params.id);
+    if (produto) {
+      const produtoFormatado = {
+        id_produto: produto.id_produto,
+        sku: produto.sku,
+        nome: produto.nome + ` (${produto.nome_cor})`,
+        valor: produto.valor,
+        imagem: produto.imagem,
+        descricao: produto.descricao,
+      };
+      res.json(produto);
+    } else if (variacao) {
+      const produto = await obterProdutoPorId(variacao.id_produto);
+      const variacaoFormatada = {
+        id_produto: produto.id_produto,
+        sku: variacao.sku,
+        nome: produto.nome + ` (${variacao.nome_cor})`,
+        valor: produto.valor,
+        imagem: variacao.imagem,
+        descricao: produto.descricao,
+      };
+      res.json(variacaoFormatada);
     } else {
       res.status(404).json({ mensagem: `Produto não encontrado` });
     }
@@ -284,4 +320,5 @@ export {
   listarProdutosPorCategoriaController,
   obterProdutoPorIdCatalogoController,
   listarProdutosVariacoesController,
+  obterProdutoPorSkuController,
 };

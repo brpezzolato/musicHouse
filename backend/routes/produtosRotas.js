@@ -10,6 +10,7 @@ import {
   listarProdutosPorCategoriaController,
   obterProdutoPorIdCatalogoController,
   listarProdutosVariacoesController,
+  obterProdutoPorSkuController,
 } from '../controllers/ProdutoController.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
 import multer from 'multer';
@@ -38,6 +39,7 @@ router.get('/catalogo/:id', obterProdutoPorIdCatalogoController);
 router.get('/categoria', listarProdutosPorCategoriaController);
 router.get('/hypados', maisVendidosController);
 router.get('/:id', obterProdutoPorIdController);
+router.get('/sku/:id', obterProdutoPorSkuController);
 router.post('/', upload.single('imagem'), criarProdutoController);
 router.put('/:id', atualizarProdutoController);
 router.delete('/:id', excluirProdutoController);
