@@ -16,8 +16,7 @@ import {
 } from '@/components/ui/dialog';
 import { ScanLine, CreditCard } from 'lucide-react';
 import Select from 'react-select';
-import { CollapsibleTrigger } from '@radix-ui/react-collapsible';
-import { no } from 'zod/v4/locales';
+import './style.css';
 
 export default function PdvHome() {
   const [formaPgto, setFormaPgto] = useState(null);
@@ -92,6 +91,7 @@ export default function PdvHome() {
             desc: data.descricao,
           };
           setProdutos((resto) => [...resto, formatado]);
+          setProdutoSelecionado(null);
         }
       } else {
         console.log('Erro ao carregar produtos:', response.statusText);
@@ -109,6 +109,7 @@ export default function PdvHome() {
 
     setProdutos(novo);
     setUltimoProduto(atualizado);
+    setProdutoSelecionado(null);
   }
 
   const total = produtos.reduce((acc, p) => acc + p.preco * p.qtd, 0);
@@ -220,9 +221,9 @@ export default function PdvHome() {
                   </div>
 
                   <div className="sm:w-1/3 text-left sm:text-center font-medium text-gray-800 text-sm">
-                    R$
-                    {p.preco.toLocaleString('pt-BR', {
-                      minimumFractionDigits: 2,
+                    {parseInt(p.preco).toLocaleString('pt-BR', {
+                      style: 'currency',
+                      currency: 'BRL',
                     })}
                   </div>
 
@@ -294,16 +295,27 @@ export default function PdvHome() {
             <div className="bg-gray-50/90 p-4 rounded-md shadow-sm text-sm">
               <div className="flex justify-between mb-1 text-gray-700 text-sm sm:text-base">
                 <span>Sub Total</span>
-                <span>R$ {total.toFixed(2)}</span>
+                {parseInt(total).toLocaleString('pt-BR', {
+                  style: 'currency',
+                  currency: 'BRL',
+                })}
               </div>
               <div className="flex justify-between mb-2 text-gray-700 text-sm sm:text-base">
                 <span>Tax 5%</span>
-                <span>R$ {tax.toFixed(2)}</span>
+                <span>
+                  {parseInt(tax).toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                  })}
+                </span>
               </div>
               <div className="flex justify-between font-semibold border-t pt-2 text-gray-800 text-sm sm:text-base">
                 <span>Total Amount</span>
                 <span className="text-[var(--vermelho-vivo)]">
-                  R$ {totalFinal.toFixed(2)}
+                  {parseInt(totalFinal).toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                  })}
                 </span>
               </div>
             </div>
