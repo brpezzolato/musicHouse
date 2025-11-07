@@ -14,9 +14,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { ScanLine, CreditCard } from 'lucide-react';
+import { ScanLine, CreditCard, TruckElectric } from 'lucide-react';
 import Select from 'react-select';
 import './style.css';
+import DialogFinalizar from '@/components/DialogFinalizar/DialogFinalizar';
+import { Toaster } from '@/components/ui/sonner';
 
 export default function PdvHome() {
   const [formaPgto, setFormaPgto] = useState(null);
@@ -136,12 +138,14 @@ export default function PdvHome() {
          background-size: cover;
          background-repeat: no-repeat;
          background-position: center;
+        //  overflow-y: hidden;
         }
       `}</style>
 
       {carregando === true ? <h1>cu gostoso</h1> : null}
 
       <div className="min-h-screen flex flex-col">
+        <Toaster />
         <div className="flex flex-wrap justify-between items-center px-6 md:px-10 pt-6 gap-4">
           <Input
             placeholder="N° OPERADOR: ***000"
@@ -196,21 +200,21 @@ export default function PdvHome() {
         {/* CONTEÚDO PRINCIPAL */}
         <div className="flex flex-col lg:flex-row flex-1 px-4 md:px-10 py-5 gap-6 md:gap-8">
           {/* COLUNA ESQUERDA */}
-          <div className="flex-1 bg-white/95 rounded-md shadow-sm border border-gray-100 p-4 md:p-6 backdrop-blur-sm overflow-hidden">
+          <div className="flex-1 bg-white/95 rounded-md shadow-sm border border-gray-100 p-4 md:p-12 backdrop-blur-sm overflow-hidden max-h-[80vh]">
             <div className="hidden sm:grid grid-cols-3 text-center font-semibold border-b pb-3 text-gray-800">
               <span>Nome</span>
               <span>Preço</span>
               <span>Qtd</span>
             </div>
 
-            <div className="mt-3 flex flex-col gap-3 h-[300px] sm:h-[400px] md:h-[400px] overflow-y-auto">
+            <div className="mt-3 flex flex-col gap-3 max-h-[100%] overflow-y-auto">
               {produtos.map((p, index) => (
                 <div
                   key={index}
                   className="flex flex-col sm:flex-row sm:items-center justify-between bg-gray-50 rounded-md px-4 py-3 shadow-sm hover:bg-gray-100 transition"
                 >
                   {/* Nome + imagem */}
-                  <div className="flex items-center gap-3 sm:w-1/3 mb-2 sm:mb-0">
+                  <div className="flex items-center gap-3 sm:w-1/3 mb-2 ">
                     <img src={p.img} className="w-10 h-10 object-contain" />
                     <div className="text-left">
                       <p className="font-semibold text-gray-800 text-sm sm:text-base">
@@ -243,7 +247,6 @@ export default function PdvHome() {
           {/* COLUNA DIREITA */}
           <div className="w-full lg:w-[320px] flex flex-col gap-3">
             <div className="flex flex-col gap-y-[10px]">
-              <label>Insira o produto: </label>
               {!carregando && (
                 <Select
                   classNamePrefix="select-produto"
@@ -366,9 +369,7 @@ export default function PdvHome() {
               </div>
             </div>
 
-            <button className="bg-[var(--vermelho-vivo)] rounded-[15px] text-white p-3">
-              Fechar Pedido
-            </button>
+            <DialogFinalizar formaPgto={formaPgto} />
           </div>
         </div>
       </div>

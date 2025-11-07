@@ -51,7 +51,7 @@ export default function Page() {
             <CategoriaCatalogo cards={cards} />
 
             <div className="mb-10">
-              <h2 className="text-center text-2xl font-bold text-gray-800 lg:text-3xl">
+              <h2 className="text-center italic text-2xl font-bold text-gray-800 lg:text-3xl">
                 Instrumentos{' '}
                 <span className="text-[#c1121f] ">mais hypados</span>
                 <span>
