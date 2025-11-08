@@ -369,7 +369,7 @@ export default function PdvHome() {
               </div>
             </div>
 
-            <DialogFinalizar formaPgto={formaPgto} />
+            <DialogFinalizar formaPgto={formaPgto} itens={produtos} />
           </div>
         </div>
       </div>

@@ -65,6 +65,9 @@ CREATE TABLE formasPagamentos (
     tipo ENUM('pix', 'debito', 'credito') NOT NULL
 );
 
+INSERT INTO formasPagamentos (tipo) VALUES
+('debito'), ('credito'), ('pix');
+
 CREATE TABLE caixas (
     id_sessao_caixa INT AUTO_INCREMENT PRIMARY KEY,
     id_franquia INT NOT NULL,
