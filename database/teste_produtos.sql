@@ -23,8 +23,8 @@ INSERT INTO produtos (sku, nome, descricao, materiais, detalhes, nome_cor, cor, 
 ('612743', 'Mesa de Som 8 Canais', 'Mesa compacta com equalizador e efeitos digitais.', 'Plástico e alumínio', 'Entrada XLR e Phantom Power 48V', 'Cinza', '#808080', NULL, 6, 2199.00, 1200.00, 'mesa_8ch.jpg'),
 ('498251', 'Case para Guitarra', 'Case rígido com interior acolchoado e trava metálica.', 'Madeira e veludo', 'Protege contra impacto e umidade', 'Preta', '#000000', NULL, 7, 799.90, 300.00, 'case_guitarra.jpg');
 
-INSERT INTO variacoes_produto (sku, id_produto, nome_cor, cor, imagem, status) VALUES
-('723519', 1, 'Sunburst', '#FF8C42', 
+INSERT INTO variacoes_produto (sku, id_produto, nome_cor, cor, custo_producao, imagem, status) VALUES
+('723519', 1, 'Sunburst', '#FF8C42', 320.00,
 'https://forbes.com.br/wp-content/uploads/2021/04/Listas_WillSmith_020421_GettyImages-800x533.jpg, https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTc69z017Uix9vUVF5ZHPVe1kzUIlSSdFdXgA&s', 'Ativo'),
-('941683', 1, 'Preto Fosco', '#000', 
+('941683', 1, 'Preto Fosco', '#000', 320.00,
 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlhDzDPDy-8bNBNELnjo0NdGd7Pfc1NNwQm-VaA4KYL-gzzkLixO1c2ZG0rwE9XZ4u4--tRlqw_o0EX0J_EwOoauzZ0RKqPALTqXi1zQ&s=10, https://m.media-amazon.com/images/M/MV5BNWJmNDNiMzgtOGNlOC00MmU4LThkNjUtNTIxNmQwMzQ4NTczXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'Ativo');

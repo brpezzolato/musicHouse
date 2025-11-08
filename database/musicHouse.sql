@@ -85,6 +85,7 @@ CREATE TABLE venda (
     id_funcionario INT NOT NULL,
     id_sessao_caixa INT NOT NULL,
     valor_total DECIMAL(10,2) NOT NULL,
+    lucro DECIMAL(10,2) NULL,
     desconto DECIMAL(10,2),
     id_pagamento INT NOT NULL,
     status ENUM('Aberta', 'Paga', 'Cancelada') NOT NULL DEFAULT 'Aberta',
@@ -114,7 +115,7 @@ INSERT INTO categorias (nome, descricao, icone, iconeSite) VALUES
 
 CREATE TABLE produtos (
     id_produto INT AUTO_INCREMENT PRIMARY KEY,
-    sku TEXT NOT NULL UNIQUE,
+    sku VARCHAR(6) NOT NULL UNIQUE,
     nome VARCHAR(200) NOT NULL,
     descricao VARCHAR(300) NOT NULL,
     materiais VARCHAR(300) NOT NULL,
@@ -131,10 +132,11 @@ CREATE TABLE produtos (
 
 CREATE TABLE variacoes_produto (
     id_variacao INT AUTO_INCREMENT PRIMARY KEY,
-    sku TEXT NOT NULL UNIQUE,
+    sku VARCHAR(6) NOT NULL UNIQUE,
     id_produto INT NOT NULL,
     nome_cor VARCHAR(150) NOT NULL,
     cor TEXT NOT NULL,
+    custo_producao DECIMAL(10,2),
     imagem TEXT,
     status ENUM('Ativo', 'Inativo') DEFAULT 'Ativo',
     data_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -146,23 +148,22 @@ CREATE TABLE variacoes_produto (
 CREATE TABLE estoque (
     id_estoque INT AUTO_INCREMENT PRIMARY KEY,
     id_franquia INT NOT NULL,
-    id_produto INT NOT NULL,
+    sku VARCHAR(6) NOT NULL,
     quantidade INT NOT NULL DEFAULT 0,
     minimo INT NOT NULL DEFAULT 0,
-    UNIQUE KEY uq_estoque (id_franquia, id_produto),
-    CONSTRAINT fk_est_franquia FOREIGN KEY (id_franquia) REFERENCES franquias(id_franquia),
-    CONSTRAINT fk_est_prod FOREIGN KEY (id_produto) REFERENCES produtos(id_produto)
-) ;
+    CONSTRAINT fk_est_franquia FOREIGN KEY (id_franquia) REFERENCES franquias(id_franquia)
+);
 
 CREATE TABLE item_venda (
     id_item INT AUTO_INCREMENT PRIMARY KEY,
     id_venda INT NOT NULL,
-    id_produto INT NOT NULL,
+    sku_produto VARCHAR(6) NULL,
+    sku_variacao VARCHAR(6) NULL,
     quantidade INT NOT NULL,
-    preco_utilitario DECIMAL(10, 2),
+    preco_unitario DECIMAL(10, 2),
+    lucro DECIMAL(10, 2),
     valor_total DECIMAL(10,2) NOT NULL,
-    CONSTRAINT fk_item_venda FOREIGN KEY (id_venda) REFERENCES venda(id_venda),
-    CONSTRAINT fk_item_prod FOREIGN KEY (id_produto) REFERENCES produtos(id_produto)
+    CONSTRAINT fk_item_venda FOREIGN KEY (id_venda) REFERENCES venda(id_venda)
 );
 
 CREATE TABLE fornecedores (
@@ -245,19 +246,3 @@ CREATE TABLE recebimentos_venda (
     CONSTRAINT fk_rec_venda FOREIGN KEY (id_venda) REFERENCES venda(id_venda),
     CONSTRAINT fk_rec_forma FOREIGN KEY (id_pagamento) REFERENCES formasPagamentos(id_pagamento)
 );
-
-CREATE INDEX idx_func_franquia ON funcionarios(id_franquia);
-CREATE INDEX idx_caixas_franquia ON caixas(id_franquia);
-CREATE INDEX idx_caixas_func ON caixas(id_funcionario);
-CREATE INDEX idx_venda_datas ON venda(data_venda);
-CREATE INDEX idx_venda_franquia ON venda(id_franquia);
-CREATE INDEX idx_venda_sessao ON venda(id_sessao_caixa);
-CREATE INDEX idx_item_venda_venda ON item_venda(id_venda);
-CREATE INDEX idx_item_venda_prod ON item_venda(id_produto);
-CREATE INDEX idx_prod_categoria ON produtos(id_categoria);
-CREATE INDEX idx_pf_prod ON produtos_fornecedores(id_produto);
-CREATE INDEX idx_pf_forn ON produtos_fornecedores(id_fornecedor);
-CREATE INDEX idx_estoque_franquia_prod ON estoque(id_franquia, id_produto);
-CREATE INDEX idx_clientes_email ON clientes(email);
-CREATE INDEX idx_end_cliente ON enderecos_cliente(id_cliente);
-CREATE INDEX idx_rec_venda ON recebimentos_venda(id_venda);

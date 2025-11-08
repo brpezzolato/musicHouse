@@ -40,9 +40,6 @@ INSERT INTO funcionarios (
 ('Bruna Oliveira', '11111111122', 'PB-1234500', '1995-06-17', 'Feminino', 'Solteiro',
  'bruna.oliveira.jpa@musichouse.com.br', '(83) 98888-2010', 10, 2, '/funcionarios/bruna-oliveira-jpa.png', 'loja2024', 'Ativo'),
 
-('Eduardo Campos', '11111111123', 'SP-6543210', '1990-03-08', 'Masculino', 'Casado',
- 'eduardo.campos.interior@musichouse.com.br', '(11) 98888-2011', 11, 2, '/funcionarios/eduardo-campos-interior.png', 'loja2024', 'Ativo'),
-
 -- CAIXAS (id_credencial = 3)
 ('Felipe Andrade', '11111111124', 'SP-7778889', '1998-01-22', 'Masculino', 'Solteiro',
  'felipe.andrade@musichouse.com.br', '(11) 97777-3001', 1, 3, '/funcionarios/felipe-andrade.png', '123456', 'Ativo'),
@@ -72,7 +69,4 @@ INSERT INTO funcionarios (
  'andre.luiz@musichouse.com.br', '(51) 97777-3009', 9, 3, '/funcionarios/andre-luiz.png', '123456', 'Ativo'),
 
 ('Paula Mendes', '11111111133', 'PB-2223242', '1997-06-06', 'Feminino', 'Solteiro',
- 'paula.mendes@musichouse.com.br', '(83) 97777-3010', 10, 3, '/funcionarios/paula-mendes.png', '123456', 'Ativo'),
-
-('Henrique Barbosa', '11111111134', 'SP-2425262', '1991-01-16', 'Masculino', 'Casado',
- 'henrique.barbosa@musichouse.com.br', '(11) 97777-3011', 11, 3, '/funcionarios/henrique-barbosa.png', '123456', 'Ativo');
+ 'paula.mendes@musichouse.com.br', '(83) 97777-3010', 10, 3, '/funcionarios/paula-mendes.png', '123456', 'Ativo')

@@ -91,6 +91,7 @@ export default function PdvHome() {
             qtd: 1,
             img: imagem[0],
             desc: data.descricao,
+            eVariacao: data.eVariacao,
           };
           setProdutos((resto) => [...resto, formatado]);
           setProdutoSelecionado(null);
@@ -369,7 +370,7 @@ export default function PdvHome() {
               </div>
             </div>
 
-            <DialogFinalizar formaPgto={formaPgto} itens={produtos} />
+            <DialogFinalizar formaPgto={formaPgto} itens={produtos} total={total} />
           </div>
         </div>
       </div>

@@ -93,8 +93,9 @@ const obterProdutoPorSkuController = async (req, res) => {
         valor: produto.valor,
         imagem: produto.imagem,
         descricao: produto.descricao,
+        eVariacao: false,
       };
-      res.json(produto);
+      res.json(produtoFormatado);
     } else if (variacao) {
       const produto = await obterProdutoPorId(variacao.id_produto);
       const variacaoFormatada = {
@@ -104,6 +105,7 @@ const obterProdutoPorSkuController = async (req, res) => {
         valor: produto.valor,
         imagem: variacao.imagem,
         descricao: produto.descricao,
+        eVariacao: true,
       };
       res.json(variacaoFormatada);
     } else {

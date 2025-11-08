@@ -228,3 +228,7 @@
 * {
   font-family: 'Noto Sans Hebrew', sans-serif;
 }
+
+:root {
+  --ring: var(--vermelho-vivo);
+}

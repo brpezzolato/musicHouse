@@ -1,6 +1,5 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogClose,
@@ -21,10 +20,12 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import NextStep from '@/components/ui/next-step-brpe';
+import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 
-export default function DialogDemo({ formaPgto, itens }) {
+export default function DialogDemo({ formaPgto, itens, total }) {
   const botaoCss =
-    'bg-[var(--vermelho-vivo)] rounded-[15px] w-full text-white h-10 hover:bg-[#CCc1121]';
+    'bg-[var(--vermelho-vivo)] rounded-[15px] w-full text-white h-10 hover:bg-[#CCc1121] cursor-pointer';
   const [page, setPage] = useState(1);
   const pgtoFormatado =
     formaPgto === 1 ? (
@@ -40,6 +41,46 @@ export default function DialogDemo({ formaPgto, itens }) {
         Pix <ScanLine className="inline size-7" />
       </span>
     );
+
+  const [processandoPgto, setProcessandoPgto] = useState(true);
+
+  useEffect(() => {
+    if (page === 2) {
+      setTimeout(() => {
+        setProcessandoPgto(false);
+        fechamentoDePedido();
+      }, 5000);
+    } else {
+      setProcessandoPgto(true);
+    }
+  }, [page]);
+
+  async function fechamentoDePedido() {
+    try {
+      const data = {
+        id_pagamento: formaPgto,
+        valor_total: total,
+        desconto: 0,
+        itensVenda: itens,
+      };
+      const response = await fetch('http://localhost:8080/vendas', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        alert('venda foi um sucesso');
+      } else {
+        console.log('Erro na venda:', response.statusText);
+      }
+    } catch (error) {
+      console.log('Erro ao tentar criar venda:', error);
+    }
+  }
 
   if (formaPgto) {
     return (
@@ -60,21 +101,11 @@ export default function DialogDemo({ formaPgto, itens }) {
                 }}
               >
                 <DialogHeader className="h-fit">
-                  {page === 1 ? (
-                    <DialogClose asChild>
-                      <button>
-                        <MoveLeft />
-                      </button>
-                    </DialogClose>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        setPage(1);
-                      }}
-                    >
+                  <DialogClose asChild>
+                    <button>
                       <MoveLeft />
                     </button>
-                  )}
+                  </DialogClose>
                   <DialogTitle className="text-[30px]">
                     Resumo do Pedido - {pgtoFormatado}
                   </DialogTitle>
@@ -124,20 +155,15 @@ export default function DialogDemo({ formaPgto, itens }) {
               </DialogContent>
             ) : (
               <DialogContent
-                className="sm:max-w-[40vw] h-auto flex flex-col"
+                className={`sm:max-w-[40vw] h-auto flex flex-col 
+                ${processandoPgto === false && 'bg-[#fcfbfb]'}`}
                 showCloseButton={false}
                 onInteractOutside={(e) => {
                   e.preventDefault();
                 }}
               >
                 <DialogHeader className="h-fit">
-                  {page === 1 ? (
-                    <DialogClose asChild>
-                      <button>
-                        <MoveLeft />
-                      </button>
-                    </DialogClose>
-                  ) : (
+                  {processandoPgto === true && (
                     <button
                       onClick={() => {
                         setPage(1);
@@ -157,30 +183,43 @@ export default function DialogDemo({ formaPgto, itens }) {
                 <div className=""></div>
                 <div className="flex justify-center">
                   <div className="w-120">
-                    <video
-                      src="/pdv/pagAnimation.mp4"
-                      autoPlay
-                      muted
-                      loop
-                    ></video>
+                    {processandoPgto === true ? (
+                      <video
+                        src="/pdv/pagAnimation.mp4"
+                        autoPlay
+                        muted
+                        loop
+                      ></video>
+                    ) : (
+                      <div className="flex justify-center">
+                        <video
+                          src="/pdv/sucesso.mp4"
+                          autoPlay
+                          className="w-67"
+                          muted
+                          loop
+                        ></video>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div></div>
                 <div></div>
                 <DialogFooter className="items-end">
-                  <DialogClose
-                    onClick={() => {
-                      setPage(1);
-                    }}
-                    asChild
-                  >
-                    <button className="px-4 py-2">Cancelar</button>
-                  </DialogClose>
-                  <NextStep
-                    onClick={() => {
-                      setPage(2);
-                    }}
-                  />
+                  {processandoPgto === true ? (
+                    <Button
+                      size="lg"
+                      className="border-2 border-[var(--vermelho-vivo)] bg-[var(--vermelho-vivo)] text-white w-full rounded-[15px] pt-3 pb-3"
+                      disabled
+                    >
+                      <Spinner />
+                      Aguarde Processando pagamento
+                    </Button>
+                  ) : (
+                    <Button size="lg" className={botaoCss}>
+                      Emitir nota fiscal
+                    </Button>
+                  )}
                 </DialogFooter>
               </DialogContent>
             )}
@@ -210,7 +249,7 @@ export default function DialogDemo({ formaPgto, itens }) {
                   </div>
                 </div>
               ),
-              { duration: 30000, position: 'top-right' }
+              { duration: 3000, position: 'top-right' }
             )
           }
         >
