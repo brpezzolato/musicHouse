@@ -4,8 +4,12 @@ import {
   obterFuncionarioPorId,
   criarFuncionario,
 } from '../models/Funcionario.js';
-import generatePassword from '../utils/generatePassword.js';
-import generateHashedPassword from '../utils/hashPassword.js';
+import { fileURLToPath } from 'url';
+import path from 'path'
+import generatePassword from '../utils/generatePassword.js'
+import {generateHashedPassword} from '../utils/hashPassword.js'
+import { enviarEmailCadastrarFuncionario } from '../utils/nodemailer.js';
+
 
 const listarFuncionariosController = async (req, res) => {
   // if (!req.usuario.id) {
@@ -83,13 +87,20 @@ const criarFuncionarioController = async (req, res) => {
       estado_civil,
       email,
       telefone,
-      id_franquia,
       id_credencial,
-      fotoFuncionario,
     } = req.body;
 
-    const senhaGerada = await generatePassword();
-    const senhaHash = await generateHashedPassword(senhaGerada);
+    let fotoPerfil = null;
+    if (req.file) {
+      fotoPerfil = req.file.path.replace(__dirname.replace('\\controllers', ''), '');
+    }
+    const senhaFuncionario = await generatePassword()
+    
+
+    const hashSenha = await generateHashedPassword(senhaFuncionario)
+
+
+    const id_franquia = req.query.franquia || 1;
 
     const funcionarioData = {
       nome_completo,
@@ -99,29 +110,25 @@ const criarFuncionarioController = async (req, res) => {
       sexo,
       estado_civil,
       email,
+      senha: hashSenha,
       telefone,
       id_franquia,
       id_credencial,
-      fotoFuncionario,
-      senha: senhaHash,
+      fotoFuncionario: fotoPerfil
     };
 
-    console.log('Dados do novo Funcionario:', senhaHash);
-
     const funcionarioId = await criarFuncionario(funcionarioData);
+    await enviarEmailCadastrarFuncionario(nome_completo, senhaFuncionario, email, funcionarioId)
+
     res.status(201).json({
-      mensagem: `Funcionario de registro ${funcionarioId} Criado com sucesso !!! | Guarde a senha do funcionario: ${senhaGerada}`,
-      funcionarioData,
+      mensagem: 'Funcionario Criado com sucesso !!!',
+      funcionarioId,
     });
   } catch (error) {
     console.error('Erro ao criar Funcionario:', error);
-    if (error.errno === 1062) {
-      return res.status(400).json({ mensagem: 'CPF ou Email já cadastrado' });
-    }
     res.status(500).json({ mensagem: 'Erro ao criar Funcionario' });
   }
 };
-
 export {
   listarFuncionariosController,
   listarFuncionariosPorFranquiaController,

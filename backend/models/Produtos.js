@@ -131,6 +131,25 @@ const listarVariacoes = async () => {
   }
 };
 
+const listarSkus = async () => {
+  try {
+    const produtos = await executeRawQuery('SELECT sku FROM produtos;');
+    const variacoes = await executeRawQuery(
+      'SELECT sku FROM variacoes_produto;'
+    );
+
+    const todosSkus = [...produtos, ...variacoes];
+
+    const skuCada = todosSkus.map((cada) => {
+      return cada.sku;
+    });
+    return skuCada;
+  } catch (err) {
+    console.error('Erro ao listar skus: ', err);
+    throw err;
+  }
+};
+
 export {
   listarProdutos,
   obterProdutoPorId,
@@ -144,4 +163,5 @@ export {
   listarVariacoes,
   obterProdutoPorSku,
   obterVariacaoPorSku,
+  listarSkus,
 };

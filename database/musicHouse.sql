@@ -51,8 +51,12 @@ CREATE TABLE funcionarios (
     telefone VARCHAR(20) NOT NULL,
     id_franquia INT NOT NULL,
     id_credencial INT NOT NULL,
-    fotoFuncionario TEXT NOT NULL,
+    fotoFuncionario TEXT,
+    token TEXT,
+	reset_token VARCHAR(100),
+    reset_expires DATETIME,
     senha TEXT NOT NULL,
+    primeiroLogin BOOLEAN DEFAULT true,  
     status ENUM('Ativo', 'Inativo') DEFAULT 'Ativo',
     data_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -150,7 +154,7 @@ CREATE TABLE estoque (
     id_franquia INT NOT NULL,
     sku VARCHAR(6) NOT NULL,
     quantidade INT NOT NULL DEFAULT 0,
-    minimo INT NOT NULL DEFAULT 0,
+    aviso INT NOT NULL DEFAULT 10,
     CONSTRAINT fk_est_franquia FOREIGN KEY (id_franquia) REFERENCES franquias(id_franquia)
 );
 

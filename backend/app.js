@@ -8,12 +8,28 @@ import franquiasRotas from './routes/franquiasRotas.js';
 import fornecedorRotas from './routes/fornecedorRotas.js';
 import navbarRotas from './routes/navbarRotas.js';
 import vendasRotas from './routes/vendasRotas.js';
+import authRotas from './routes/authRotas.js'
+import cookieParser from 'cookie-parser';
+
+
 
 const app = express();
 const port = 8080;
 
-app.use(cors());
+
+app.use(cookieParser());
+
+// Configuração do CORS
+app.use(cors({
+    origin: true,  // domínio do frontend
+    credentials: true // Permitir envio de cookies
+}));
+
+// Middleware para ler JSON no corpo das requisições
 app.use(express.json());
+
+
+app.use('/auth', authRotas);
 app.use('/uploads', express.static('uploads'));
 app.use('/funcionarios', funcionarioRotas);
 app.use('/navbar', navbarRotas);

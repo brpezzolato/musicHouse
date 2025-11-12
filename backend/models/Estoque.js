@@ -24,6 +24,18 @@ const obterEstoquePorId = async (id_estoque) => {
   }
 };
 
+const obterEstoquePorSkuEFranquia = async (sku, id_franquia) => {
+  try {
+    return await read(
+      'estoque',
+      `sku = ${sku} AND id_franquia = ${id_franquia}`
+    );
+  } catch (err) {
+    console.error('Erro ao obter estoque por ID: ', err);
+    throw err;
+  }
+};
+
 const criarEstoque = async (estoqueData) => {
   try {
     return await create('estoque', estoqueData);
@@ -33,9 +45,14 @@ const criarEstoque = async (estoqueData) => {
   }
 };
 
-const atualizarEstoque = async (id_estoque, estoqueData) => {
+const atualizarEstoque = async (id_franquia, sku, estoqueData) => {
   try {
-    await update('estoque', estoqueData, `id_estoque = ${id_estoque}`);
+    await update(
+      'estoque',
+      estoqueData,
+      `sku = ${sku} AND id_franquia = ${id_franquia}`
+    );
+
   } catch (error) {
     console.error('Erro ao atualizar estoque:', error);
     throw error;
@@ -57,4 +74,5 @@ export {
   criarEstoque,
   atualizarEstoque,
   excluirEstoque,
+  obterEstoquePorSkuEFranquia,
 };

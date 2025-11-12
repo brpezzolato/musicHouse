@@ -3,7 +3,6 @@ import {
   listarEstoquesController,
   obterEstoquePorIdController,
   criarEstoqueController,
-  atualizarEstoqueController,
   excluirEstoqueController
 } from "../controllers/EstoqueController.js";
 
@@ -13,9 +12,7 @@ const router = Router();
 router.get("/", listarEstoquesController);
 router.get("/:id", obterEstoquePorIdController);
 router.post("/", criarEstoqueController);
-router.put("/:id", atualizarEstoqueController);
 router.delete("/:id", excluirEstoqueController);
-
 
 
 router.options('/', (req, res) => {

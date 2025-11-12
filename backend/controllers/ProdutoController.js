@@ -49,7 +49,6 @@ const listarProdutosVariacoesController = async (req, res) => {
     const todos = produtos.concat(variacoesComNomes);
 
     res.status(200).json(todos);
-    console.log(todos);
   } catch (err) {
     console.error('Erro ao listar produtos: ', err);
     res.status(500).json({ mensagem: 'Erro ao listar produtos' });

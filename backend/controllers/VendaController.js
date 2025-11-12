@@ -1,5 +1,9 @@
 import { criarVenda, criarItemVenda, addLucroVenda } from '../models/Venda.js';
 import { obterProdutoPorSku, obterVariacaoPorSku } from '../models/Produtos.js';
+import {
+  obterEstoquePorSkuEFranquia,
+  atualizarEstoque,
+} from '../models/Estoque.js';
 
 const criarVendaController = async (req, res) => {
   try {
@@ -53,6 +57,14 @@ const criarVendaController = async (req, res) => {
       }
       lucroVendaTotal += itemVendaData.lucro;
       await criarItemVenda(itemVendaData);
+      const quantidadeAntiga = await obterEstoquePorSkuEFranquia(
+        produtoLido.sku,
+        id_franquia || 1
+      );
+      const data = {
+        quantidade: quantidadeAntiga.quantidade - cada.qtd,
+      };
+      await atualizarEstoque(id_franquia || 1, produtoLido.sku, data);
     }
 
     const lucroVendaEnviar = { lucro: lucroVendaTotal };

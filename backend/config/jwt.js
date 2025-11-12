@@ -1,1 +1,5 @@
-export const JWT_SECRET = '17f43adb628c43701c9e8f21dc8901844c465f88642ab16ad65164d597d827dbdb4bc729926c1fc71a50a9353a6ac763742c97351c09a4f16cfc7df8e342dad7'
+import dotenv from 'dotenv'
+dotenv.config()
+
+export const JWT_SECRET = process.env.JWT_SECRET
+
