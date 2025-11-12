@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Coins } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { redirect } from "next/navigation";
 
 export default function FormLogin() {
     const [etapa, setEtapa] = useState(1);
@@ -28,10 +29,22 @@ export default function FormLogin() {
             })
 
             const data = await response.json()
+            console.log(data)
             if (data.etapa === 'codigo') {
                 return router.replace('/token-primeiro-login')
-            } else if (data.etapa === 'login_finalizado') {
-                console.log(data)
+            } else{
+                if(data.funcionario.id_credencial === 1){
+                    return redirect("/matriz");
+                }
+
+                if(data.funcionario.id_credencial === 2){
+                    return redirect("/afilial");
+                }
+
+                if(data.funcionario.id_credencial === 3){
+                    return redirect("/pdv");
+                }
+
             }
 
 

@@ -162,49 +162,71 @@ export default function DialogDemo({ formaPgto, itens, total }) {
                   e.preventDefault();
                 }}
               >
-                <DialogHeader className="h-fit">
-                  {processandoPgto === true && (
-                    <button
-                      onClick={() => {
-                        setPage(1);
-                      }}
-                    >
-                      <MoveLeft />
-                    </button>
-                  )}
-                  <DialogTitle className="text-[30px]">
-                    Processando Pagamento
-                  </DialogTitle>
-                  <DialogDescription>
-                    Oriente o cliente a inserir o cartão ou escanear o QR Code
-                    do Pix e verifique a confirmação antes de concluir.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className=""></div>
-                <div className="flex justify-center">
-                  <div className="w-120">
-                    {processandoPgto === true ? (
-                      <video
-                        src="/pdv/pagAnimation.mp4"
-                        autoPlay
-                        muted
-                        loop
-                      ></video>
-                    ) : (
-                      <div className="flex justify-center">
+                {processandoPgto === true ? (
+                  <>
+                    <DialogHeader className="h-fit">
+                      {processandoPgto === true && (
+                        <button
+                          onClick={() => {
+                            setPage(1);
+                          }}
+                        >
+                          <MoveLeft />
+                        </button>
+                      )}
+                      <DialogTitle className="text-[30px]">
+                        Processando Pagamento
+                      </DialogTitle>
+                      <DialogDescription>
+                        Oriente o cliente a inserir o cartão ou escanear o QR
+                        Code do Pix e verifique a confirmação antes de concluir.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className=""></div>
+                    <div className="flex justify-center">
+                      <div className="w-55">
                         <video
-                          src="/pdv/sucesso.mp4"
+                          src="/pdv/pagAnimation.mp4"
                           autoPlay
-                          className="w-67"
                           muted
                           loop
                         ></video>
                       </div>
-                    )}
-                  </div>
-                </div>
-                <div></div>
-                <div></div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <DialogHeader className="h-fit">
+                      {processandoPgto === true && (
+                        <button
+                          onClick={() => {
+                            setPage(1);
+                          }}
+                        >
+                          <MoveLeft />
+                        </button>
+                      )}
+                      <DialogTitle className="text-[30px]">
+                        Pagamento Concluído
+                      </DialogTitle>
+                      <DialogDescription>
+                        Oriente o cliente a inserir o cartão ou escanear o QR
+                        Code do Pix e verifique a confirmação antes de concluir.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className=""></div>
+                    <div className="flex justify-center">
+                      <video
+                        src="/pdv/sucesso.mp4"
+                        autoPlay
+                        className="w-55"
+                        muted
+                        loop
+                      ></video>
+                    </div>
+                  </>
+                )}
+                <div className=""></div>
                 <DialogFooter className="items-end">
                   {processandoPgto === true ? (
                     <Button
