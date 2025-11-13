@@ -22,6 +22,8 @@ export default function Page() {
   const [imagens, setImagens] = useState([]);
   const [imagensDefault, setImagensDefault] = useState([]);
   const [nomeCor, setNomecor] = useState();
+  const [sku, setSku] = useState('');
+  const [skuDefault, setSkuDefault] = useState('');
   const [nomeCorDefault, setNomeDefault] = useState();
 
   async function carregarProduto() {
@@ -35,6 +37,8 @@ export default function Page() {
         setImagens(data.slides);
         setImagensDefault(data.slides);
         setNomecor(data.colors[0].name);
+        setSku(data.sku);
+        setSkuDefault(data.sku);
         setNomeDefault(data.colors[0].name);
         setCarregando(false);
       } else {
@@ -45,13 +49,15 @@ export default function Page() {
     }
   }
 
-  async function trocarImagem(eVariacao, imagem, cor) {
+  async function trocarImagem(eVariacao, imagem, cor, sku) {
     if (eVariacao === true) {
       setImagens(imagem);
       setNomecor(cor);
+      setSku(sku);
     } else {
       setImagens(imagensDefault);
       setNomecor(nomeCorDefault);
+      setSku(skuDefault)
     }
   }
 
@@ -66,6 +72,7 @@ export default function Page() {
 
   const product = {
     name: produto.name,
+    sku: produto.sku,
     price: produto.price,
     href: produto.href,
     breadcrumbs: produto.breadcrumbs || [],
@@ -135,6 +142,7 @@ export default function Page() {
 
               <NavProdutos
                 preco={product.price}
+                sku={sku}
                 categoria={product.breadcrumbs[1]?.name}
                 idCategoria={product.breadcrumbs[1]?.id}
               />
@@ -201,7 +209,8 @@ export default function Page() {
                                 trocarImagem(
                                   color.eVariacao,
                                   color.imagens,
-                                  color.name
+                                  color.name,
+                                  color.sku
                                 );
                               }}
                               aria-label={color.name}

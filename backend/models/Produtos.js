@@ -99,13 +99,14 @@ const maisVendidos = async () => {
         p.valor,
         p.imagem,
         p.desconto,
-        SUM(iv.quantidade) AS unidades_vendidas
-      FROM item_venda iv
-      JOIN produtos p ON p.id_produto = iv.id_produto
+        COALESCE(SUM(iv.quantidade), 0) AS unidades_vendidas
+      FROM produtos p
+      LEFT JOIN variacoes_produto vp ON vp.id_produto = p.id_produto
+      LEFT JOIN item_venda iv 
+        ON iv.sku_produto = p.sku OR iv.sku_variacao = vp.sku
       GROUP BY p.id_produto, p.nome, p.descricao, p.valor, p.imagem, p.desconto
       ORDER BY unidades_vendidas DESC
-      LIMIT 3;
-    `;
+      LIMIT 3;`;
     return await executeRawQuery(sql);
   } catch (err) {
     console.error('Erro ao buscar produtos mais vendidos: ', err);

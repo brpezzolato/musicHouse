@@ -1,6 +1,6 @@
 'use client';
 
-export default function NavProdutos({ preco, categoria, idCategoria }) {
+export default function NavProdutos({ preco, sku, categoria, idCategoria }) {
   return (
     <>
       <nav className="bg-white border-gray-200 dark:bg-gray-900">
@@ -15,15 +15,14 @@ export default function NavProdutos({ preco, categoria, idCategoria }) {
               alt="Flowbite Logo"
             />
           </a>
+          
           <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-            <h2 className="text-2xl font-bold italic pr-6">{preco}</h2>
-
+            <h2 className="text-2xl font-bold italic pr-6 pt-[0.3rem]">{preco}</h2>
             <a
               type="button"
-              href={`/catalogo/categoria/${idCategoria}`}
-              className="text-white bg-[#780000] focus:ring-4 focus:outline-none font-medium  text-sm px-4 py-2 text-center mr-5"
+              className="text-white bg-[#780000] font-semibold text-[15px] px-4 py-2 text-center mr-5"
             >
-              Instrumento de {categoria}
+              Código: {sku}
             </a>
           </div>
         </div>

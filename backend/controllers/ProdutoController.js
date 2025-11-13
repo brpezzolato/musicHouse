@@ -16,6 +16,7 @@ import {
 } from '../models/Produtos.js';
 import { obterCategoriaPorId } from '../models/CategoriasProdutos.js';
 import generateSku from '../utils/gerarSku.js';
+import { log } from 'console';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -125,6 +126,7 @@ const obterProdutoPorIdCatalogoController = async (req, res) => {
     if (produto) {
       const produtoFormatado = {
         name: produto.nome,
+        sku: produto.sku,
         price: parseInt(produto.valor).toLocaleString('pt-BR', {
           style: 'currency',
           currency: 'BRL',
@@ -151,6 +153,7 @@ const obterProdutoPorIdCatalogoController = async (req, res) => {
             id: variacao.id_variacao,
             name: variacao.nome_cor,
             cor: variacao.cor,
+            sku: variacao.sku,
             imagens:
               variacao.imagem.split(',').map((imagem) => imagem.trim()) || null,
             eVariacao: true,
@@ -165,7 +168,7 @@ const obterProdutoPorIdCatalogoController = async (req, res) => {
         description: produto.descricao,
         slides: produto.imagem.split(',').map((imagem) => imagem.trim()),
       };
-
+      
       res.status(200).json(produtoFormatado);
       console.log(produtoFormatado);
     } else {

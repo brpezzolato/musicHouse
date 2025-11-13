@@ -32,7 +32,12 @@ export default function Page({ produtos }) {
                 onClick={(event) => toggleTooltip(event, produto.id_produto)}
                 className="absolute top-0 left-0 z-20 shadow-md flex items-center justify-center bg-red-600 p-3 rounded-full cursor-pointer duration-300 mt-2 ml-2 transform"
               >
-                <Tag fill="none" className="fill-white" height="20px" width="20px" />
+                <Tag
+                  fill="none"
+                  className="fill-white"
+                  height="20px"
+                  width="20px"
+                />
               </div>
             )}
 
@@ -59,7 +64,10 @@ export default function Page({ produtos }) {
                 {produto.nome}
               </a>
               <span className="text-[#c1121f] base:text-base italic">
-                R$ {produto.valor.replace('.', ',')}
+                {parseInt(produto.valor).toLocaleString('pt-BR', {
+                  style: 'currency',
+                  currency: 'BRL',
+                })}
               </span>
             </div>
           </div>
