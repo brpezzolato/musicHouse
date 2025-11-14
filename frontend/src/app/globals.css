@@ -232,3 +232,8 @@
 :root {
   --ring: var(--vermelho-vivo);
 }
+
+::selection {
+  background-color: var(--vermelho-vivo);
+  color: var(--branco-suave);
+}

@@ -25,6 +25,8 @@ export default function Page() {
   const [sku, setSku] = useState('');
   const [skuDefault, setSkuDefault] = useState('');
   const [nomeCorDefault, setNomeDefault] = useState();
+  const [estoque, setEstoque] = useState();
+  const [estoqueDefault, setEstoqueDefault] = useState();
 
   async function carregarProduto() {
     try {
@@ -40,6 +42,8 @@ export default function Page() {
         setSku(data.sku);
         setSkuDefault(data.sku);
         setNomeDefault(data.colors[0].name);
+        setEstoque(data.estoque);
+        setEstoqueDefault(data.estoque);
         setCarregando(false);
       } else {
         console.log('Erro no login:', response.statusText);
@@ -49,15 +53,17 @@ export default function Page() {
     }
   }
 
-  async function trocarImagem(eVariacao, imagem, cor, sku) {
+  async function trocarImagem(eVariacao, imagem, cor, sku, estoque) {
     if (eVariacao === true) {
       setImagens(imagem);
       setNomecor(cor);
       setSku(sku);
+      setEstoque(estoque);
     } else {
       setImagens(imagensDefault);
       setNomecor(nomeCorDefault);
-      setSku(skuDefault)
+      setSku(skuDefault);
+      setEstoque(estoqueDefault);
     }
   }
 
@@ -73,7 +79,10 @@ export default function Page() {
   const product = {
     name: produto.name,
     sku: produto.sku,
+    estoque: produto.estoque,
     price: produto.price,
+    desconto: produto.desconto,
+    valorComDesconto: produto.valorComDesconto,
     href: produto.href,
     breadcrumbs: produto.breadcrumbs || [],
     colors: produto.colors || [],
@@ -142,20 +151,23 @@ export default function Page() {
 
               <NavProdutos
                 preco={product.price}
+                desconto={product.desconto}
+                valorComDesconto={product.valorComDesconto}
                 sku={sku}
-                categoria={product.breadcrumbs[1]?.name}
-                idCategoria={product.breadcrumbs[1]?.id}
+                estoque={estoque}
               />
 
               <div className="relative w-full overflow-hidden">
                 <img
                   src={imagens?.[current]}
                   alt={`Slide ${current + 1}`}
-                  className="h-[calc(600px-30px)] w-full rotate-90 object-contain transition-all duration-500 ease-in-out -mt-30 -mb-30"
+                  className={`h-[calc(600px-30px)] w-full rotate-90 object-contain transition-all duration-500 ease-in-out -mt-30 -mb-30 ${
+                    estoque === 0 ? 'grayscale' : ''
+                  }`}
                 />
                 <button
                   onClick={prevSlide}
-                  className="pl-20 pr-20 absolute left-0 top-0 bottom-0 flex items-center justify-center text-red-600 hover:text-red-700"
+                  className="pl-14 pr-20 absolute left-0 top-0 bottom-0 flex items-center justify-center text-red-600 hover:text-red-700"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -174,7 +186,7 @@ export default function Page() {
                 </button>
                 <button
                   onClick={nextSlide}
-                  className="absolute right-0 top-0 bottom-0 flex items-center justify-center w-[15%] text-red-600 hover:text-red-700"
+                  className="absolute pl-20 pr-14 right-0 top-0 bottom-0 flex items-center justify-center text-red-600 hover:text-red-700"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -210,23 +222,17 @@ export default function Page() {
                                   color.eVariacao,
                                   color.imagens,
                                   color.name,
-                                  color.sku
+                                  color.sku,
+                                  color.estoque
                                 );
                               }}
                               aria-label={color.name}
-                              disabled={color.outOfStock}
-                              className={`${
-                                color.classes
-                              } size-10 rounded-full appearance-none cursor-pointer checked:outline-2 checked:outline-offset-2 focus-visible:outline-3 focus-visible:outline-offset-3 ${
-                                color.outOfStock
-                                  ? 'opacity-40 cursor-not-allowed'
-                                  : ''
-                              }`}
+                              className={`${color.classes} size-10 rounded-full appearance-none cursor-pointer checked:outline-2 checked:outline-offset-2 focus-visible:outline-3 focus-visible:outline-offset-3`}
                               style={{ backgroundColor: color.cor }}
                             />
                             {color.outOfStock && (
                               <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
-                                <X className="-mt-1 w-7 h-7 text-gray-700 opacity-70" />
+                                <X className="-mt-1 w-7 h-7 text-white mix-blend-difference opacity-70" />
                               </div>
                             )}
                           </label>
@@ -249,28 +255,36 @@ export default function Page() {
                   <div className="lg:col-span-3 pl-30 pr-30">
                     <div className="mb-4 border-b border-gray-200 dark:border-gray-700">
                       <ul
-                        className="flex flex-wrap -mb-px text-sm font-medium text-center"
+                        className="flex flex-nowrap justify-center items-center gap-4 -mb-px text-center font-medium w-full"
                         role="tablist"
                       >
-                        <li className="me-2" role="presentation">
+                        <li role="presentation" className="flex-1">
                           <button
-                            className={tabClass('descrição')}
+                            className={`${tabClass(
+                              'descrição'
+                            )} w-full text-[clamp(12px,3vw,15px)] px-[clamp(6px,2vw,14px)]`}
                             onClick={() => setActiveTab('descrição')}
                           >
                             Descrição
                           </button>
                         </li>
-                        <li className="me-2" role="presentation">
+
+                        <li role="presentation" className="flex-1">
                           <button
-                            className={tabClass('materiais')}
+                            className={`${tabClass(
+                              'materiais'
+                            )} w-full text-[clamp(12px,3vw,15px)] px-[clamp(6px,2vw,14px)]`}
                             onClick={() => setActiveTab('materiais')}
                           >
                             Materiais
                           </button>
                         </li>
-                        <li role="presentation">
+
+                        <li role="presentation" className="flex-1">
                           <button
-                            className={tabClass('details')}
+                            className={`${tabClass(
+                              'details'
+                            )} w-full text-[clamp(12px,3vw,15px)] px-[clamp(6px,2vw,14px)]`}
                             onClick={() => setActiveTab('details')}
                           >
                             Detalhes
@@ -281,7 +295,7 @@ export default function Page() {
 
                     {activeTab === 'descrição' && (
                       <div className="space-y-6">
-                        <p className="text-base text-gray-900">
+                        <p className="text-[clamp(13px,2.5vw,17px)] leading-[clamp(18px,3vw,26px)] text-gray-900">
                           {product.description}
                         </p>
                       </div>
@@ -291,10 +305,13 @@ export default function Page() {
                       <div className="mt-4">
                         <ul
                           role="list"
-                          className="list-disc space-y-2 pl-4 text-sm mt-3"
+                          className="list-disc space-y-[clamp(4px,1.2vw,10px)] pl-[clamp(12px,3vw,20px)] mt-3"
                         >
                           {product.highlights.map((item) => (
-                            <li key={item} className="text-base text-gray-900">
+                            <li
+                              key={item}
+                              className="text-[clamp(13px,2.5vw,17px)] leading-[clamp(18px,3vw,26px)] text-gray-900"
+                            >
                               {item}
                             </li>
                           ))}
@@ -304,7 +321,7 @@ export default function Page() {
 
                     {activeTab === 'details' && (
                       <div className="mt-4">
-                        <p className="text-base text-gray-900 mt-3">
+                        <p className="text-[clamp(13px,2.5vw,17px)] leading-[clamp(18px,3vw,26px)] text-gray-900 mt-3">
                           {product.details}
                         </p>
                       </div>

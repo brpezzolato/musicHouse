@@ -11,7 +11,7 @@ export default function CategoriaSkeleton() {
           </div>
         </div>
       </div>
-      <div className="flex justify-center items-center flex-wrap flex-col md:flex-row gap-y-14 md:gap-x-[5%]">
+      <div className="flex justify-left flex-wrap flex-col md:flex-row gap-y-14 md:gap-x-10">
         <div className="flex flex-col space-y-3">
           <Skeleton className="h-60 w-[250px] rounded-xl" />
           <div className="space-y-2">

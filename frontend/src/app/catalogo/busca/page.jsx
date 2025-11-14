@@ -78,7 +78,7 @@ export default function Busca() {
               ) : (
                 <>
                   <div className="ms-[4%]">
-                    <h1 className="text-4xl font-medium mb-2">
+                    <h1 className="text-4xl font-medium mb-2 mt-8">
                       Você buscou por{' '}
                       <span className="text-[#c1121f]">"{valorBuscado}"</span>
                     </h1>
@@ -89,9 +89,13 @@ export default function Busca() {
                         : 'Resultados encontrados'}
                     </p>
                   </div>
-                  <div className="flex justify-center items-center mb-15 mt-1">
-                    <div className="w-90">
-                      <img src="/busca/semProdutos.png" alt="" />
+                  <div className="flex justify-center items-center mb-20 mt-1">
+                    <div className="w-80">
+                      <img
+                        src="/busca/semProdutos.png"
+                        className="mt-18"
+                        alt="Caixa de som quebrada"
+                      />
                     </div>
                   </div>
                 </>

@@ -59,18 +59,19 @@ export default function Page() {
           <CategoriaSkeleton />
         ) : (
           <div className="mt-5 mb-15">
-            <div className="ms-8 flex flex-col gap-y-2">
-              <h1 className="text-left text-4xl font-bold text-gray-800">
+            <div className="px-4 flex flex-col gap-y-2 text-center md:text-left md:ml-5">
+              <h1 className="text-4xl font-bold text-gray-800">
                 Instrumentos de{' '}
                 <span className="text-[#c1121f]">{categoria.nome}</span>
               </h1>
-              <p className="text-left italic text-gray-600 md:text-lg">
+
+              <p className="italic text-gray-600 md:text-lg">
                 Foram encontrados {produtos.length} instrumentos na categoria de{' '}
                 {categoria.nome}
               </p>
             </div>
 
-            <div className="mt-8 flex flex-wrap justify-left lg:justify-center md:gap-x-[5%]">
+            <div className="mt-8 px-4 flex flex-wrap justify-center gap-10 md:ms-8">
               <Produtos produtos={produtos} />
             </div>
           </div>

@@ -157,7 +157,7 @@ export default function PdvHome() {
             <Dialog>
               <form>
                 <DialogTrigger asChild>
-                  <Button className="bg-[var(--vermelho-vivo)] w-full hover:bg-[var(--vermelho-vivo)] hover:opacity-[0.9] cursor-pointer text-white text-base sm:text-lg font-semibold rounded-[15px] py-5 sm:py-6 transition-all">
+                  <Button className="bg-[var(--vermelho-vivo)] w-full hover:bg-[var(--vermelho-vivo)] hover:opacity-[0.9] cursor-pointer text-white text-base sm:text-md font-semibold rounded-[15px] py-5 transition-all">
                     FECHAR CAIXA
                   </Button>
                 </DialogTrigger>

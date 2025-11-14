@@ -3,6 +3,7 @@
 import { AppSidebar } from '@/components/app-sidebar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import FooterCatalogo from '@/components/FooterCatalogo/FooterCatalogo';
+import FooterTest from '@/components/FooterTest/FooterTest';
 import SvgHype from '@/components/Produtos/svgHype';
 import InputBusca from '@/components/InputBusca/InputBusca';
 import CategoriaCatalogo from '@/components/CategoriaCatalogo/CategoriaCatalogo';

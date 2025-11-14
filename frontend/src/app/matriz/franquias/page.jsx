@@ -78,7 +78,7 @@ export default function Franquias() {
       {/* ================= HERO ================= */}
       <section
         className="relative w-full h-screen bg-cover bg-center flex flex-col items-center justify-center"
-        style={{ backgroundImage: "url('/catalogo/bannerfranquias.png')" }}
+        style={{ backgroundImage: "url('/franquias/FundoFranquias.png')" }}
       >
         {/* overlay escuro */}
         <div className="absolute inset-0 bg-black/50" />
@@ -119,7 +119,7 @@ export default function Franquias() {
         `}</style>
       </section>
 
-      {/* ============ CONTEÚDO  ============ */}
+      {/* ============ CONTEUDO  ============ */}
       <section id="conteudo-franquias" className="bg-[#f4f4f4]">
         <div className="flex flex-1 w-full max-w-[1400px] mx-auto gap-6 mt-8 px-4 pb-16">
           <div className="flex flex-col flex-1 items-center">

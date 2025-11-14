@@ -13,6 +13,7 @@ const listarCategoriasComProdutosController = async (req, res) => {
 
       return {
         title: cat.nome,
+        id_categoria: cat.id_categoria,
         url: `catalogo/categoria/${cat.id_categoria}`,
         icon: cat.iconeSite,
         items: produtosDaCategoria.map((prod) => ({

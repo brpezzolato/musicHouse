@@ -2,15 +2,16 @@ export default function FooterCatalogo() {
   return (
     <>
       <footer className="bg-[#780000] shadow-sm dark:bg-white">
-        <div className="w-full mx-auto max-w-screen-xl p-6 md:flex md:items-center md:justify-between">
-          <span className="text-sm text-white sm:text-center dark:text-white">
+        <div className="w-full mx-auto max-w-screen-xl p-6 flex flex-col min-[767px]:flex-row min-[767px]:items-center min-[767px]:justify-between gap-5 min-[767px]:gap-0">
+          
+          <span className="text-sm text-white text-center dark:text-white">
             © 2025{' '}
             <a href="/catalogo/copyright" className="hover:underline">
               Music House™
             </a>
             . All Rights Reserved.
           </span>
-          <ul className="mr-5 flex gap-5">
+          <ul className="flex justify-center md:justify-end gap-6">
             <li>
               <a
                 href="https://www.facebook.com/?locale=pt_BR"

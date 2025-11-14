@@ -1,7 +1,7 @@
 USE musicHouse;
 
 INSERT INTO estoque (id_franquia, sku, quantidade, aviso) VALUES
-(1, '532194', 100, 10),
+(1, '532194', 0, 10),
 (1, '748391', 100, 10),
 (1, '185932', 100, 10),
 (1, '937251', 100, 10),

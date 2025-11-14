@@ -16,7 +16,9 @@ import {
 } from '../models/Produtos.js';
 import { obterCategoriaPorId } from '../models/CategoriasProdutos.js';
 import generateSku from '../utils/gerarSku.js';
+import { obterEstoquePorSkuEFranquia } from '../models/Estoque.js';
 import { log } from 'console';
+import { promises } from 'dns';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -122,15 +124,45 @@ const obterProdutoPorIdCatalogoController = async (req, res) => {
     const produto = await obterProdutoPorId(req.params.id);
     const produtoVariacao = await obterVariacoesPorProdutoId(req.params.id);
     const categoria = await obterCategoriaPorId(produto.id_categoria);
+    const estoqueVari = [];
+
+    // OBJETOS DE VARIACOES FORMATADOS PARA RECEBIMENTO DO FRONT
+    for (const variacao of produtoVariacao) {
+      const estoque = await obterEstoquePorSkuEFranquia(variacao.sku, 1);
+      estoqueVari.push({
+        id: variacao.id_variacao,
+        name: variacao.nome_cor,
+        cor: variacao.cor,
+        sku: variacao.sku,
+        imagens: variacao.imagem.split(',').map((img) => img.trim()),
+        eVariacao: true,
+        classes: `checked:outline-gray`,
+        outOfStock: estoque.quantidade === 0 ? true : false,
+        estoque: estoque.quantidade,
+      });
+    }
+
     // OBJETO FORMATADO PARA O FRONT-END RECEBER FACILITADO
     if (produto) {
+      const estoquee = await obterEstoquePorSkuEFranquia(produto.sku, 1);
       const produtoFormatado = {
         name: produto.nome,
         sku: produto.sku,
-        price: parseInt(produto.valor).toLocaleString('pt-BR', {
+        estoque: estoquee.quantidade,
+        price: Number(produto.valor).toLocaleString('pt-BR', {
           style: 'currency',
           currency: 'BRL',
         }),
+        desconto: parseInt(produto.desconto),
+        valorComDesconto:
+          produto.desconto != null
+            ? Number(
+                produto.valor * ((100 - produto.desconto) / 100)
+              ).toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+              })
+            : null,
         href: `/catalogo/produto/${produto.id_produto}`,
         breadcrumbs: [
           { id: 1, name: 'Home', href: '/catalogo' },
@@ -146,20 +178,10 @@ const obterProdutoPorIdCatalogoController = async (req, res) => {
             name: produto.nome_cor,
             eVariacao: false,
             cor: produto.cor,
-            classes: `checked:outline-gray-400`,
-            outOfStock: false,
+            classes: `checked:outline-gray`,
+            outOfStock: estoquee.quantidade === 0 ? true : false,
           },
-          ...produtoVariacao.map((variacao) => ({
-            id: variacao.id_variacao,
-            name: variacao.nome_cor,
-            cor: variacao.cor,
-            sku: variacao.sku,
-            imagens:
-              variacao.imagem.split(',').map((imagem) => imagem.trim()) || null,
-            eVariacao: true,
-            classes: `checked:outline-gray-400`,
-            outOfStock: false,
-          })),
+          ...estoqueVari,
         ],
         highlights: produto.materiais
           .split(',')
@@ -168,9 +190,8 @@ const obterProdutoPorIdCatalogoController = async (req, res) => {
         description: produto.descricao,
         slides: produto.imagem.split(',').map((imagem) => imagem.trim()),
       };
-      
+
       res.status(200).json(produtoFormatado);
-      console.log(produtoFormatado);
     } else {
       res.status(404).json({ mensagem: `Produto não encontrado` });
     }

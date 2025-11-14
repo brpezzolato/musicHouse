@@ -82,180 +82,148 @@ export default function DialogDemo({ formaPgto, itens, total }) {
     }
   }
 
-  if (formaPgto) {
-    return (
-      <>
-        <Dialog>
-          <form>
-            <DialogTrigger asChild>
-              <Button className={botaoCss}>
-                Finalizar Pedido <TruckElectric />
-              </Button>
-            </DialogTrigger>
-            {page === 1 ? (
-              <DialogContent
-                className="sm:max-w-[40vw] h-auto flex flex-col"
-                showCloseButton={false}
-                onInteractOutside={(e) => {
-                  e.preventDefault();
-                }}
-              >
-                <DialogHeader className="h-fit">
-                  <DialogClose asChild>
-                    <button>
-                      <MoveLeft />
-                    </button>
-                  </DialogClose>
-                  <DialogTitle className="text-[30px]">
-                    Resumo do Pedido - {pgtoFormatado}
-                  </DialogTitle>
-                  <DialogDescription>
-                    Verifique os itens do pedido e a forma de pagamento
-                    selecionada, depois avance para a próxima etapa.
-                  </DialogDescription>
-                </DialogHeader>
+  return (
+    <>
+      <Dialog>
+        <form>
+          <DialogTrigger asChild>
+            <Button className={botaoCss} disabled={formaPgto === null}>
+              Finalizar Pedido <TruckElectric />
+            </Button>
+          </DialogTrigger>
+          {page === 1 ? (
+            <DialogContent
+              className="sm:max-w-[40vw] h-auto flex flex-col"
+              showCloseButton={false}
+              onInteractOutside={(e) => {
+                e.preventDefault();
+              }}
+            >
+              <DialogHeader className="h-fit">
+                <DialogClose asChild>
+                  <button>
+                    <MoveLeft />
+                  </button>
+                </DialogClose>
+                <DialogTitle className="text-[30px]">
+                  Resumo do Pedido - {pgtoFormatado}
+                </DialogTitle>
+                <DialogDescription>
+                  Verifique os itens do pedido e a forma de pagamento
+                  selecionada, depois avance para a próxima etapa.
+                </DialogDescription>
+              </DialogHeader>
 
-                <div className=""></div>
-                <div className="flex h-full">
-                  <div className="flex flex-col gap-y-2">
-                    {itens.map((produto, index) => (
-                      <div key={index} className="flex flex-row">
-                        <p className="">
-                          {produto.qtd}x - {produto.nome} -{' '}
-                          {parseInt(produto.preco * produto.qtd).toLocaleString(
-                            'pt-BR',
-                            {
-                              style: 'currency',
-                              currency: 'BRL',
-                            }
-                          )}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                  <div className=""></div>
+              <div className=""></div>
+              <div className="flex h-full">
+                <div className="flex flex-col gap-y-2">
+                  {itens.map((produto, index) => (
+                    <div key={index} className="flex flex-row">
+                      <p className="">
+                        {produto.qtd}x - {produto.nome} -{' '}
+                        {parseInt(produto.preco * produto.qtd).toLocaleString(
+                          'pt-BR',
+                          {
+                            style: 'currency',
+                            currency: 'BRL',
+                          }
+                        )}
+                      </p>
+                    </div>
+                  ))}
                 </div>
-                <div></div>
-                <div></div>
-                <DialogFooter className="items-end">
-                  <DialogClose
+                <div className=""></div>
+              </div>
+              <div></div>
+              <div></div>
+              <DialogFooter className="items-end">
+                <DialogClose
+                  onClick={() => {
+                    setPage(1);
+                  }}
+                  asChild
+                >
+                  <button className="px-4 py-2">Cancelar</button>
+                </DialogClose>
+                <NextStep
+                  onClick={() => {
+                    setPage(2);
+                  }}
+                />
+              </DialogFooter>
+            </DialogContent>
+          ) : (
+            <DialogContent
+              className={`sm:max-w-[40vw] h-auto flex flex-col 
+                ${processandoPgto === false && 'bg-[#fcfbfb]'}`}
+              showCloseButton={false}
+              onInteractOutside={(e) => {
+                e.preventDefault();
+              }}
+            >
+              <DialogHeader className="h-fit">
+                {processandoPgto === true && (
+                  <button
                     onClick={() => {
                       setPage(1);
                     }}
-                    asChild
                   >
-                    <button className="px-4 py-2">Cancelar</button>
-                  </DialogClose>
-                  <NextStep
-                    onClick={() => {
-                      setPage(2);
-                    }}
-                  />
-                </DialogFooter>
-              </DialogContent>
-            ) : (
-              <DialogContent
-                className={`sm:max-w-[40vw] h-auto flex flex-col 
-                ${processandoPgto === false && 'bg-[#fcfbfb]'}`}
-                showCloseButton={false}
-                onInteractOutside={(e) => {
-                  e.preventDefault();
-                }}
-              >
-                <DialogHeader className="h-fit">
-                  {processandoPgto === true && (
-                    <button
-                      onClick={() => {
-                        setPage(1);
-                      }}
-                    >
-                      <MoveLeft />
-                    </button>
-                  )}
-                  <DialogTitle className="text-[30px]">
-                    Processando Pagamento
-                  </DialogTitle>
-                  <DialogDescription>
-                    Oriente o cliente a inserir o cartão ou escanear o QR Code
-                    do Pix e verifique a confirmação antes de concluir.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className=""></div>
-                <div className="flex justify-center">
-                  <div className="w-120">
-                    {processandoPgto === true ? (
+                    <MoveLeft />
+                  </button>
+                )}
+                <DialogTitle className="text-[30px]">
+                  Processando Pagamento
+                </DialogTitle>
+                <DialogDescription>
+                  Oriente o cliente a inserir o cartão ou escanear o QR Code do
+                  Pix e verifique a confirmação antes de concluir.
+                </DialogDescription>
+              </DialogHeader>
+              <div className=""></div>
+              <div className="flex justify-center">
+                <div className="w-58">
+                  {processandoPgto === true ? (
+                    <video
+                      src="/pdv/pagAnimation.mp4"
+                      autoPlay
+                      muted
+                      loop
+                    ></video>
+                  ) : (
+                    <div className="flex justify-center">
                       <video
-                        src="/pdv/pagAnimation.mp4"
+                        src="/pdv/sucesso.mp4"
                         autoPlay
+                        className="w-67"
                         muted
                         loop
                       ></video>
-                    ) : (
-                      <div className="flex justify-center">
-                        <video
-                          src="/pdv/sucesso.mp4"
-                          autoPlay
-                          className="w-67"
-                          muted
-                          loop
-                        ></video>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div></div>
-                <div></div>
-                <DialogFooter className="items-end">
-                  {processandoPgto === true ? (
-                    <Button
-                      size="lg"
-                      className="border-2 border-[var(--vermelho-vivo)] bg-[var(--vermelho-vivo)] text-white w-full rounded-[15px] pt-3 pb-3"
-                      disabled
-                    >
-                      <Spinner />
-                      Aguarde Processando pagamento
-                    </Button>
-                  ) : (
-                    <Button size="lg" className={botaoCss}>
-                      Emitir nota fiscal
-                    </Button>
-                  )}
-                </DialogFooter>
-              </DialogContent>
-            )}
-          </form>
-        </Dialog>
-      </>
-    );
-  } else {
-    return (
-      <>
-        <Button
-          className={botaoCss}
-          onClick={() =>
-            toast.custom(
-              () => (
-                <div className="bg-[#f5f5f5] rounded-2xl pt-3 ps-4 pb-3 w-[420px] shadow-[0_0_35px_rgba(0,0,0,0.2)]">
-                  <div className="flex items-center gap-2">
-                    <TriangleAlertIcon className="size-7 mr-2" />
-                    <div>
-                      <div className="font-semibold">
-                        Selecione uma forma de pagamento
-                      </div>
-                      <div className="text-sm opacity-90">
-                        Certifique-se da forma de pagamento selecionada
-                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
-              ),
-              { duration: 3000, position: 'top-right' }
-            )
-          }
-        >
-          Finalizar Pedido <TruckElectric />
-        </Button>
-      </>
-    );
-  }
+              </div>
+              <div></div>
+              <div></div>
+              <DialogFooter className="items-end">
+                {processandoPgto === true ? (
+                  <Button
+                    size="lg"
+                    className="border-2 border-[var(--vermelho-vivo)] bg-[var(--vermelho-vivo)] text-white w-full rounded-[15px] pt-3 pb-3"
+                    disabled
+                  >
+                    <Spinner />
+                    Aguarde Processando pagamento
+                  </Button>
+                ) : (
+                  <Button size="lg" className={botaoCss}>
+                    Emitir nota fiscal
+                  </Button>
+                )}
+              </DialogFooter>
+            </DialogContent>
+          )}
+        </form>
+      </Dialog>
+    </>
+  );
 }
