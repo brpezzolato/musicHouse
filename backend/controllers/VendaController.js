@@ -40,9 +40,16 @@ const criarVendaController = async (req, res) => {
           id_venda: vendaId,
           sku_variacao: cada.sku,
           quantidade: cada.qtd,
-          preco_unitario: cada.preco,
-          valor_total: cada.preco * cada.qtd,
-          lucro: (cada.preco - produtoLido.custo_producao) * cada.qtd,
+          preco_unitario:
+            cada.desconto != null ? cada.valorComDesconto : cada.preco,
+          valor_total:
+            cada.desconto != null
+              ? cada.valorComDesconto * cada.qtd
+              : cada.preco * cada.qtd,
+          lucro:
+            cada.desconto != null
+              ? (cada.valorComDesconto - produtoLido.custo_producao) * cada.qtd
+              : (cada.preco - produtoLido.custo_producao) * cada.qtd,
         };
       } else {
         produtoLido = await obterProdutoPorSku(cada.sku);
@@ -50,9 +57,16 @@ const criarVendaController = async (req, res) => {
           id_venda: vendaId,
           sku_produto: produtoLido.sku,
           quantidade: cada.qtd,
-          preco_unitario: cada.preco,
-          valor_total: cada.preco * cada.qtd,
-          lucro: (cada.preco - produtoLido.custo_producao) * cada.qtd,
+          preco_unitario:
+            cada.desconto != null ? cada.valorComDesconto : cada.preco,
+          valor_total:
+            cada.desconto != null
+              ? cada.valorComDesconto * cada.qtd
+              : cada.preco * cada.qtd,
+          lucro:
+            cada.desconto != null
+              ? (cada.valorComDesconto - produtoLido.custo_producao) * cada.qtd
+              : (cada.preco - produtoLido.custo_producao) * cada.qtd,
         };
       }
       lucroVendaTotal += itemVendaData.lucro;

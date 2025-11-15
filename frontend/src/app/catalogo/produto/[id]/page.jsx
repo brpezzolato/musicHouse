@@ -27,6 +27,13 @@ export default function Page() {
   const [nomeCorDefault, setNomeDefault] = useState();
   const [estoque, setEstoque] = useState();
   const [estoqueDefault, setEstoqueDefault] = useState();
+  //////////////////////////////////////////////////////////////////////////////
+  const [preco, setPreco] = useState();
+  const [precoDefault, setPrecoDefault] = useState();
+  const [desconto, setDesconto] = useState();
+  const [descontoDefault, setDescontoDefault] = useState();
+  const [valorComDesconto, setValorComDesconto] = useState();
+  const [valorComDescontoDefault, setValorComDescontoDefault] = useState();
 
   async function carregarProduto() {
     try {
@@ -44,6 +51,12 @@ export default function Page() {
         setNomeDefault(data.colors[0].name);
         setEstoque(data.estoque);
         setEstoqueDefault(data.estoque);
+        setPreco(data.price);
+        setPrecoDefault(data.price);
+        setDesconto(data.desconto || null);
+        setDescontoDefault(data.desconto || null);
+        setValorComDesconto(data.valorComDesconto || null);
+        setValorComDescontoDefault(data.valorComDesconto || null);
         setCarregando(false);
       } else {
         console.log('Erro no login:', response.statusText);
@@ -53,17 +66,32 @@ export default function Page() {
     }
   }
 
-  async function trocarImagem(eVariacao, imagem, cor, sku, estoque) {
+  async function trocarImagem(
+    eVariacao,
+    imagem,
+    cor,
+    sku,
+    estoque,
+    desconto,
+    valor,
+    valorComDesconto
+  ) {
     if (eVariacao === true) {
       setImagens(imagem);
       setNomecor(cor);
       setSku(sku);
       setEstoque(estoque);
+      setDesconto(desconto);
+      setPreco(valor);
+      setValorComDesconto(valorComDesconto);
     } else {
       setImagens(imagensDefault);
       setNomecor(nomeCorDefault);
       setSku(skuDefault);
       setEstoque(estoqueDefault);
+      setDesconto(descontoDefault);
+      setPreco(precoDefault);
+      setValorComDesconto(valorComDescontoDefault);
     }
   }
 
@@ -80,9 +108,6 @@ export default function Page() {
     name: produto.name,
     sku: produto.sku,
     estoque: produto.estoque,
-    price: produto.price,
-    desconto: produto.desconto,
-    valorComDesconto: produto.valorComDesconto,
     href: produto.href,
     breadcrumbs: produto.breadcrumbs || [],
     colors: produto.colors || [],
@@ -150,9 +175,9 @@ export default function Page() {
               </nav>
 
               <NavProdutos
-                preco={product.price}
-                desconto={product.desconto}
-                valorComDesconto={product.valorComDesconto}
+                preco={preco}
+                desconto={desconto}
+                valorComDesconto={valorComDesconto}
                 sku={sku}
                 estoque={estoque}
               />
@@ -223,7 +248,10 @@ export default function Page() {
                                   color.imagens,
                                   color.name,
                                   color.sku,
-                                  color.estoque
+                                  color.estoque,
+                                  color.desconto,
+                                  color.valor,
+                                  color.valorComDesconto
                                 );
                               }}
                               aria-label={color.name}

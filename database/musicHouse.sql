@@ -140,6 +140,7 @@ CREATE TABLE variacoes_produto (
     id_produto INT NOT NULL,
     nome_cor VARCHAR(150) NOT NULL,
     cor TEXT NOT NULL,
+    valor DECIMAL (10,2) NOT NULL,
     custo_producao DECIMAL(10,2),
     desconto INT NULL,
     imagem TEXT,

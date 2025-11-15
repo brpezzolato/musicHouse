@@ -92,24 +92,30 @@ const obterProdutoPorSkuController = async (req, res) => {
         id_produto: produto.id_produto,
         sku: produto.sku,
         nome: produto.nome + ` (${produto.nome_cor})`,
-        valor: produto.valor,
+        valor: Number(produto.valor),
+        desconto: produto.desconto || null,
+        valorComDesconto: produto.valor * ((100 - produto.desconto) / 100),
         imagem: produto.imagem,
         descricao: produto.descricao,
         eVariacao: false,
       };
       res.json(produtoFormatado);
+      console.log(produtoFormatado);
     } else if (variacao) {
       const produto = await obterProdutoPorId(variacao.id_produto);
       const variacaoFormatada = {
         id_produto: produto.id_produto,
         sku: variacao.sku,
         nome: produto.nome + ` (${variacao.nome_cor})`,
-        valor: produto.valor,
+        valor: Number(variacao.valor),
+        desconto: variacao.desconto || null,
+        valorComDesconto: variacao.valor * ((100 - variacao.desconto) / 100),
         imagem: variacao.imagem,
         descricao: produto.descricao,
         eVariacao: true,
       };
       res.json(variacaoFormatada);
+      console.log(variacaoFormatada)
     } else {
       res.status(404).json({ mensagem: `Produto não encontrado` });
     }
@@ -119,6 +125,7 @@ const obterProdutoPorSkuController = async (req, res) => {
   }
 };
 
+// Página de detalhe do produto do catalogo
 const obterProdutoPorIdCatalogoController = async (req, res) => {
   try {
     const produto = await obterProdutoPorId(req.params.id);
@@ -133,6 +140,20 @@ const obterProdutoPorIdCatalogoController = async (req, res) => {
         id: variacao.id_variacao,
         name: variacao.nome_cor,
         cor: variacao.cor,
+        valor: Number(variacao.valor).toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+        }),
+        desconto: variacao?.desconto,
+        valorComDesconto:
+          variacao.desconto != null
+            ? Number(
+                variacao.valor * ((100 - variacao.desconto) / 100)
+              ).toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+              })
+            : null,
         sku: variacao.sku,
         imagens: variacao.imagem.split(',').map((img) => img.trim()),
         eVariacao: true,
@@ -153,7 +174,7 @@ const obterProdutoPorIdCatalogoController = async (req, res) => {
           style: 'currency',
           currency: 'BRL',
         }),
-        desconto: parseInt(produto.desconto),
+        desconto: parseInt(produto?.desconto),
         valorComDesconto:
           produto.desconto != null
             ? Number(
@@ -313,7 +334,8 @@ const excluirProdutoController = async (req, res) => {
 
 const maisVendidosController = async (req, res) => {
   try {
-    const produtos = await maisVendidos();
+    const idFranquia = 1;
+    const produtos = await maisVendidos(idFranquia);
     res.status(200).json(produtos);
   } catch (err) {
     console.error('Erro ao listar produtos mais vendidos: ', err);

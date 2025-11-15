@@ -23,7 +23,7 @@ import NextStep from '@/components/ui/next-step-brpe';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 
-export default function DialogDemo({ formaPgto, itens, total }) {
+export default function DialogDemo({ formaPgto, itens, total, desconto }) {
   const botaoCss =
     'bg-[var(--vermelho-vivo)] rounded-[15px] w-full text-white h-10 hover:bg-[#CCc1121] cursor-pointer';
   const [page, setPage] = useState(1);
@@ -60,7 +60,7 @@ export default function DialogDemo({ formaPgto, itens, total }) {
       const data = {
         id_pagamento: formaPgto,
         valor_total: total,
-        desconto: 0,
+        desconto: desconto || 0,
         itensVenda: itens,
       };
       const response = await fetch('http://localhost:8080/vendas', {

@@ -89,7 +89,7 @@ const buscarProdutosPorTermo = async (termo) => {
   }
 };
 
-const maisVendidos = async () => {
+const maisVendidos = async (idFranquia) => {
   try {
     const sql = `
       SELECT 
@@ -99,17 +99,29 @@ const maisVendidos = async () => {
         p.valor,
         p.imagem,
         p.desconto,
-        COALESCE(SUM(iv.quantidade), 0) AS unidades_vendidas
+        COALESCE(SUM(iv.quantidade), 0) AS unidades_vendidas,
+        e.quantidade AS estoque_atual
       FROM produtos p
-      LEFT JOIN variacoes_produto vp ON vp.id_produto = p.id_produto
+      LEFT JOIN variacoes_produto vp 
+        ON vp.id_produto = p.id_produto
       LEFT JOIN item_venda iv 
-        ON iv.sku_produto = p.sku OR iv.sku_variacao = vp.sku
-      GROUP BY p.id_produto, p.nome, p.descricao, p.valor, p.imagem, p.desconto
+        ON iv.sku_produto = p.sku 
+        OR iv.sku_variacao = vp.sku
+      LEFT JOIN estoque e
+        ON e.sku = p.sku 
+        OR e.sku = vp.sku
+      WHERE e.quantidade > 0
+        AND e.id_franquia = ${idFranquia}
+      GROUP BY 
+        p.id_produto, p.nome, p.descricao, p.valor,
+        p.imagem, p.desconto, e.quantidade
       ORDER BY unidades_vendidas DESC
-      LIMIT 3;`;
+      LIMIT 3;
+    `;
+
     return await executeRawQuery(sql);
   } catch (err) {
-    console.error('Erro ao buscar produtos mais vendidos: ', err);
+    console.error('Erro ao buscar produtos mais vendidos:', err);
     throw err;
   }
 };

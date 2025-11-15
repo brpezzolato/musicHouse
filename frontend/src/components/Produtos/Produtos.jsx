@@ -16,7 +16,9 @@ export default function Page({ produtos }) {
     <>
       {produtos.map((produto) => (
         <div key={produto.id_produto} className="relative group">
-          <Link href={`/catalogo/produto/${produto.id_produto}`}>
+          <Link
+            href={`/catalogo/produto/${produto.id_produto}`}
+          >
             <div className="block h-64 w-64 overflow-hidden bg-gray-100 rounded relative">
               <img
                 src={'/catalogo/violao-nylon-frente-sem-fundo.png'}
@@ -41,10 +43,10 @@ export default function Page({ produtos }) {
               )}
 
               {tooltipAberto === produto.id_produto && produto.desconto && (
-                <div className="absolute ml-12 -mt-62 left-1/2 transform -translate-x-30 z-10 opacity-100 duration-300">
+                <div className="absolute ml-12 -mt-62 left-1/2 transform -translate-x-30 z-10 opacity-100 duration-300 w-full">
                   <div className="absolute top-0 left-0 z-10 flex items-center gap-2 bg-red-600 bg-opacity-70 p-3 rounded cursor-pointer shadow-lg">
                     <span className="text-white text-sm uppercase">
-                      {produto.desconto}
+                      {produto.desconto + '% OFF'}
                     </span>
                   </div>
                 </div>
@@ -60,7 +62,7 @@ export default function Page({ produtos }) {
                   {produto.nome}
                 </p>
                 <span className="text-[#c1121f] base:text-base italic">
-                  {parseInt(produto.valor).toLocaleString('pt-BR', {
+                  {Number(produto.valor).toLocaleString('pt-BR', {
                     style: 'currency',
                     currency: 'BRL',
                   })}

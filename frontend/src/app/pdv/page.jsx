@@ -89,6 +89,8 @@ export default function PdvHome() {
             nome: data.nome,
             preco: data.valor,
             qtd: 1,
+            desconto: data.desconto,
+            valorComDesconto: data.valorComDesconto,
             img: imagem[0],
             desc: data.descricao,
             eVariacao: data.eVariacao,
@@ -115,9 +117,17 @@ export default function PdvHome() {
     setProdutoSelecionado(null);
   }
 
-  const total = produtos.reduce((acc, p) => acc + p.preco * p.qtd, 0);
-  const tax = total * 0.05;
-  const totalFinal = total + tax;
+  const total = produtos.reduce(
+    (acc, p) =>
+      acc +
+      (p.desconto !== null ? p.valorComDesconto * p.qtd : p.preco * p.qtd),
+    0
+  );
+  const desconto = produtos.reduce(
+    (acc, p) =>
+      acc + (p.desconto !== null ? (p.preco - p.valorComDesconto) * p.qtd : 0),
+    0
+  );
 
   function removerProduto(itemId, quantidade) {
     console.log(quantidade);
@@ -226,10 +236,31 @@ export default function PdvHome() {
                   </div>
 
                   <div className="sm:w-1/3 text-left sm:text-center font-medium text-gray-800 text-sm">
-                    {parseInt(p.preco).toLocaleString('pt-BR', {
-                      style: 'currency',
-                      currency: 'BRL',
-                    })}
+                    {p.desconto === null ? (
+                      <p>
+                        {Number(p.preco).toLocaleString('pt-BR', {
+                          style: 'currency',
+                          currency: 'BRL',
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </p>
+                    ) : (
+                      <>
+                        <p>
+                          {Number(p.valorComDesconto).toLocaleString('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL',
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+
+                          <span className="pl-1 text-[11px] align-top text-[var(--vermelho-vivo)]">
+                            {p.desconto}% OFF{' '}
+                          </span>
+                        </p>
+                      </>
+                    )}
                   </div>
 
                   {/* Quantidade + botão */}
@@ -298,25 +329,29 @@ export default function PdvHome() {
             {/* RESUMO DO CAIXA */}
             <div className="bg-gray-50/90 p-4 rounded-md shadow-sm text-sm">
               <div className="flex justify-between mb-1 text-gray-700 text-sm sm:text-base">
-                <span>Sub Total</span>
-                {parseInt(total).toLocaleString('pt-BR', {
+                <span>Sub Total: </span>
+                {Number(total).toLocaleString('pt-BR', {
                   style: 'currency',
                   currency: 'BRL',
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
                 })}
               </div>
               <div className="flex justify-between mb-2 text-gray-700 text-sm sm:text-base">
-                <span>Tax 5%</span>
+                <span>Desconto: </span>
                 <span>
-                  {parseInt(tax).toLocaleString('pt-BR', {
+                  {Number(desconto).toLocaleString('pt-BR', {
                     style: 'currency',
                     currency: 'BRL',
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
                   })}
                 </span>
               </div>
               <div className="flex justify-between font-semibold border-t pt-2 text-gray-800 text-sm sm:text-base">
-                <span>Total Amount</span>
+                <span>Total Final: </span>
                 <span className="text-[var(--vermelho-vivo)]">
-                  {parseInt(totalFinal).toLocaleString('pt-BR', {
+                  {parseInt(total).toLocaleString('pt-BR', {
                     style: 'currency',
                     currency: 'BRL',
                   })}
@@ -370,7 +405,12 @@ export default function PdvHome() {
               </div>
             </div>
 
-            <DialogFinalizar formaPgto={formaPgto} itens={produtos} total={total} />
+            <DialogFinalizar
+              formaPgto={formaPgto}
+              itens={produtos}
+              desconto={desconto}
+              total={total}
+            />
           </div>
         </div>
       </div>
