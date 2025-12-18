@@ -1,0 +1,8 @@
+.recharts-cartesian-axis text,
+.recharts-cartesian-axis .recharts-text {
+  fill: #ffffff !important;
+}
+
+.recharts-text {
+  fill: #ffffff !important;
+}

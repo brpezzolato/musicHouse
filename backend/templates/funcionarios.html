@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Teste Criar Funcionário</title>
+</head>
+<body>
+
+  <h1>Teste - Criar Funcionário</h1>
+
+  <form id="formFuncionario">
+    <label>Nome Completo:</label><br>
+    <input type="text" name="nome_completo" required><br><br>
+
+    <label>CPF:</label><br>
+    <input type="text" name="cpf" required><br><br>
+
+    <label>RG:</label><br>
+    <input type="text" name="rg" required><br><br>
+
+    <label>Data de Nascimento:</label><br>
+    <input type="date" name="data_nascimento" required><br><br>
+
+    <label>Sexo:</label><br>
+    <select name="sexo" required>
+      <option value="">Selecione</option>
+      <option value="Masculino">Masculino</option>
+      <option value="Feminino">Feminino</option>
+      <option value="Outro">Outro</option>
+    </select><br><br>
+
+    <label>Estado Civil:</label><br>
+    <input type="text" name="estado_civil"><br><br>
+
+    <label>Email:</label><br>
+    <input type="email" name="email" required><br><br>
+
+    <label>Telefone:</label><br>
+    <input type="text" name="telefone" required><br><br>
+
+    <label>ID Credencial:</label><br>
+    <input type="number" name="id_credencial" required><br><br>
+
+    <label>ID Franquia:</label><br>
+    <input type="number" name="id_franquia" required><br><br>
+
+    <label>Foto do Funcionário:</label><br>
+    <input type="file" name="fotoFuncionario" accept="image/*"><br><br>
+
+    <button type="submit">Criar Funcionário</button>
+  </form>
+
+  <br>
+  <h2>Resposta do servidor:</h2>
+  <pre id="resultado"></pre>
+
+  <script>
+    const form = document.getElementById("formFuncionario");
+    const resultado = document.getElementById("resultado");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch("http://localhost:8080/funcionarios/", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await response.json();
+        resultado.textContent = JSON.stringify(data, null, 2);
+
+      } catch (error) {
+        resultado.textContent = "Erro: " + error;
+      }
+    });
+  </script>
+
+</body>
+</html>

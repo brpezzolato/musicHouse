@@ -1,0 +1,70 @@
+.Corpo403 {
+    background-color: #e30613 !important;
+    width: 100vw;
+    height: 100vh;
+}
+
+.Filho {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.Logos {
+    width: 300px;
+    margin-top: 2%;
+}
+
+.ErroImg {
+    margin-left: 1%;
+    width: 30rem;
+    border-radius: 22px;
+}
+
+.DivImagem {
+    display: flex;
+    justify-content: center;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+.text {
+    color: #ffffff;
+    justify-content: center;
+    text-align: center;
+}
+
+
+.notfound-button {
+    background-color: #ffffff;
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    color: #e30613;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.button-notfound {
+    display: flex;
+    justify-content: center;
+    margin-top: 2%;
+}
+
+
+@media (max:300px) {
+    .Logos {
+        width: 300px;
+        margin-top: 2%;
+        margin-left: 5%;
+    }
+
+    .notfound-button{
+        width: 100% !important;
+    }
+}
